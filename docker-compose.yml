@@ -1,0 +1,117 @@
+version: "3.8"
+
+services:
+  # MongoDB Replica Set Nodes
+  mongo1:
+    image: mongo:6.0
+    container_name: mongo1
+    hostname: mongo1
+    command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "27011:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo2:
+    image: mongo:6.0
+    container_name: mongo2
+    hostname: mongo2
+    command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "27012:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo3:
+    image: mongo:6.0
+    container_name: mongo3
+    hostname: mongo3
+    command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "27013:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Khởi tạo Replica Set 1 lần duy nhất
+  mongo-init:
+    image: mongo:6.0
+    container_name: mongo-init
+    depends_on:
+      mongo1:
+        condition: service_healthy
+      mongo2:
+        condition: service_healthy
+      mongo3:
+        condition: service_healthy
+    restart: "no"
+    entrypoint: >
+      mongosh --host mongo1:27017 --eval 
+      "
+      try { 
+        rs.status(); 
+        print('RS already initialized.'); 
+      } catch(e) { 
+        rs.initiate({ 
+          _id: 'dbrs', 
+          members: [
+            { _id: 0, host: 'mongo1:27017' },
+            { _id: 1, host: 'mongo2:27017' },
+            { _id: 2, host: 'mongo3:27017' }
+          ] 
+        }); 
+        print('RS initiated successfully.'); 
+      }
+      "
+
+  # Redis
+  redis:
+    image: redis:7.0-alpine
+    container_name: shopee-redis
+    ports:
+      - "6379:6379"
+
+  # Zookeeper
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  # Kafka
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  # API Gateway (Nginx Reverse Proxy)
+  api-gateway:
+    image: nginx:alpine
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  default:
+    name: shopee-network

@@ -1,0 +1,10 @@
+node_modules/
+*.log
+*.txt
+.env
+.DS_Store
+dist/
+build/
+coverage/
+test_output.txt
+last_test_output.txt

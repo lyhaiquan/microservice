@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/* ===== Google Fonts ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ===== Shopee Theme Tokens ===== */
+@theme {
+  --color-shopee: #ee4d2d;
+  --color-shopee-dark: #d73211;
+  --color-shopee-light: #ff6533;
+  --color-shopee-bg: #f5f5f5;
+  --color-shopee-surface: #ffffff;
+  --color-shopee-text: #222222;
+  --color-shopee-text-secondary: #757575;
+  --color-shopee-border: #e0e0e0;
+  --color-shopee-success: #26aa99;
+  --color-shopee-error: #ff424f;
+  --color-shopee-warning: #ffbf00;
+  --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ===== Base Reset ===== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-shopee-bg);
+  color: var(--color-shopee-text);
+  min-height: 100vh;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(238, 77, 45, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(238, 77, 45, 0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* ===== Utility Classes ===== */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.gradient-shopee {
+  background: linear-gradient(135deg, #ee4d2d 0%, #ff6533 50%, #f7a072 100%);
+}
+
+.gradient-shopee-dark {
+  background: linear-gradient(135deg, #d73211 0%, #ee4d2d 100%);
+}
+
+.text-gradient-shopee {
+  background: linear-gradient(135deg, #ee4d2d, #ff6533);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btn-shopee {
+  background: linear-gradient(135deg, #ee4d2d 0%, #ff6533 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.btn-shopee:hover {
+  background: linear-gradient(135deg, #d73211 0%, #ee4d2d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(238, 77, 45, 0.4);
+}
+.btn-shopee:active {
+  transform: translateY(0);
+}
+.btn-shopee:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ===== Input Styles ===== */
+.input-shopee {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: var(--font-inter);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  background: white;
+}
+.input-shopee:focus {
+  border-color: #ee4d2d;
+  box-shadow: 0 0 0 2px rgba(238, 77, 45, 0.1);
+}
+.input-shopee::placeholder {
+  color: #b0b0b0;
+}

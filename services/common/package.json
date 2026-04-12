@@ -1,0 +1,17 @@
+{
+    "name": "common",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest --runInBand --detectOpenHandles"
+    },
+    "dependencies": {
+        "jsonwebtoken": "^9.0.3"
+    },
+    "peerDependencies": {
+        "mongoose": ">=7.0.0"
+    },
+    "devDependencies": {
+        "jest": "^30.3.0"
+    }
+}
