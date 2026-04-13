@@ -1,0 +1,573 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: -
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 100 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 100 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 100/100 VUs, 0 complete and 0 interrupted iterations
+default   [   3% ] 100 VUs  01.0s/30s
+
+running (0m02.0s), 100/100 VUs, 0 complete and 0 interrupted iterations
+default   [   7% ] 100 VUs  02.0s/30s
+
+running (0m03.0s), 100/100 VUs, 0 complete and 0 interrupted iterations
+default   [  10% ] 100 VUs  03.0s/30s
+
+running (0m04.0s), 100/100 VUs, 0 complete and 0 interrupted iterations
+default   [  13% ] 100 VUs  04.0s/30s
+time="2026-04-07T13:19:35Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_492410@ptit.edu.vn" source=console
+
+running (0m05.0s), 100/100 VUs, 0 complete and 0 interrupted iterations
+default   [  17% ] 100 VUs  05.0s/30s
+time="2026-04-07T13:19:35Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3032209@ptit.edu.vn" source=console
+time="2026-04-07T13:19:35Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8590228@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2527729@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4494927@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_162382@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6615718@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3136088@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3621116@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6017881@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3170491@ptit.edu.vn" source=console
+
+running (0m06.0s), 100/100 VUs, 0 complete and 0 interrupted iterations
+default   [  20% ] 100 VUs  06.0s/30s
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2549697@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5046404@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7414440@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6449314@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4361705@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5336071@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3119599@ptit.edu.vn" source=console
+time="2026-04-07T13:19:36Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8941305@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6129421@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8430675@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1204878@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5102739@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1061476@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3096258@ptit.edu.vn" source=console
+
+running (0m07.0s), 100/100 VUs, 6 complete and 0 interrupted iterations
+default   [  23% ] 100 VUs  07.0s/30s
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1195295@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8828587@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2959249@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3755223@ptit.edu.vn" source=console
+time="2026-04-07T13:19:37Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8997452@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7914502@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9551128@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6833903@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6543238@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1477598@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7633930@ptit.edu.vn" source=console
+
+running (0m08.0s), 100/100 VUs, 15 complete and 0 interrupted iterations
+default   [  27% ] 100 VUs  08.0s/30s
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8407866@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1555378@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7741013@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8238752@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2160223@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7688084@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9995823@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4509752@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3068864@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8177136@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5741279@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5142811@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4790599@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_174254@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4728592@ptit.edu.vn" source=console
+time="2026-04-07T13:19:38Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5711194@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8306939@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3880973@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8600406@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8752483@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1873896@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3794202@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8874228@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_333248@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9488343@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5122534@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5254952@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_98674@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_45501@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8943326@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6274983@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4319133@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3576112@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_743644@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2447831@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5786047@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4219586@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8611867@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9861550@ptit.edu.vn" source=console
+
+running (0m09.0s), 100/100 VUs, 28 complete and 0 interrupted iterations
+default   [  30% ] 100 VUs  09.0s/30s
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6822346@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6114455@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4563579@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3965246@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4951844@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7340455@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9930470@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8657153@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2579202@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7079064@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3406714@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2713592@ptit.edu.vn" source=console
+time="2026-04-07T13:19:39Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5105158@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4324608@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3136508@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2634962@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4446961@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7480673@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7513141@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8645799@ptit.edu.vn" source=console
+
+running (0m10.0s), 100/100 VUs, 70 complete and 0 interrupted iterations
+default   [  33% ] 100 VUs  10.0s/30s
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9544025@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7994804@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2953906@ptit.edu.vn" source=console
+time="2026-04-07T13:19:40Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4174108@ptit.edu.vn" source=console
+time="2026-04-07T13:18:07Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7051421@ptit.edu.vn" source=console
+
+running (1m22.5s), 100/100 VUs, 95 complete and 0 interrupted iterations
+default   [  37% ] 100 VUs  11.0s/30s
+
+running (0m12.0s), 100/100 VUs, 99 complete and 0 interrupted iterations
+default   [  40% ] 100 VUs  12.0s/30s
+time="2026-04-07T13:18:09Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4987326@ptit.edu.vn" source=console
+time="2026-04-07T13:18:09Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7874573@ptit.edu.vn" source=console
+time="2026-04-07T13:18:09Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7336719@ptit.edu.vn" source=console
+
+running (1m20.2s), 100/100 VUs, 100 complete and 0 interrupted iterations
+default   [  43% ] 100 VUs  13.0s/30s
+time="2026-04-07T13:18:10Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8203221@ptit.edu.vn" source=console
+time="2026-04-07T13:18:10Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_39629@ptit.edu.vn" source=console
+time="2026-04-07T13:18:10Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5058211@ptit.edu.vn" source=console
+time="2026-04-07T13:18:10Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7943667@ptit.edu.vn" source=console
+time="2026-04-07T13:18:10Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1850270@ptit.edu.vn" source=console
+time="2026-04-07T13:18:10Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1458547@ptit.edu.vn" source=console
+
+running (1m19.2s), 100/100 VUs, 103 complete and 0 interrupted iterations
+default   [  47% ] 100 VUs  14.0s/30s
+time="2026-04-07T13:18:11Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4897922@ptit.edu.vn" source=console
+time="2026-04-07T13:18:11Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3966849@ptit.edu.vn" source=console
+time="2026-04-07T13:18:11Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3186619@ptit.edu.vn" source=console
+time="2026-04-07T13:18:11Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4324562@ptit.edu.vn" source=console
+time="2026-04-07T13:18:11Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7782316@ptit.edu.vn" source=console
+time="2026-04-07T13:18:11Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8746662@ptit.edu.vn" source=console
+time="2026-04-07T13:18:11Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3770575@ptit.edu.vn" source=console
+time="2026-04-07T13:18:11Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6014778@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2797628@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3951107@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8438301@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_58570@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4051245@ptit.edu.vn" source=console
+
+running (1m18.2s), 100/100 VUs, 109 complete and 0 interrupted iterations
+default   [  50% ] 100 VUs  15.0s/30s
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1383336@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9467094@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1346114@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2904136@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8700561@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1443368@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6711214@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1570879@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2502237@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7814385@ptit.edu.vn" source=console
+time="2026-04-07T13:18:12Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2532399@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3184107@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5577027@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3001699@ptit.edu.vn" source=console
+
+running (1m17.2s), 100/100 VUs, 115 complete and 0 interrupted iterations
+default   [  53% ] 100 VUs  16.0s/30s
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_724992@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1081038@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4548985@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5716621@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_279926@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8146759@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6549977@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4557542@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4050138@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4256140@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3583070@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2712872@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1489628@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7196175@ptit.edu.vn" source=console
+time="2026-04-07T13:19:46Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_414607@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3173388@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3686202@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8711957@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3031628@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7955410@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2348084@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9554152@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4737625@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5694811@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8405618@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2690401@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1270647@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6172017@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1668975@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_170545@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8797630@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2218597@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5751447@ptit.edu.vn" source=console
+time="2026-04-07T13:19:47Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2350283@ptit.edu.vn" source=console
+
+running (1m16.6s), 100/100 VUs, 132 complete and 0 interrupted iterations
+default   [  57% ] 100 VUs  17.0s/30s
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2548255@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4169649@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2655837@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7526368@ptit.edu.vn" source=console
+time="2026-04-07T13:18:13Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1990014@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7785499@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_33400@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2113064@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1431156@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3801889@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4820000@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1697503@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1455004@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1805923@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4657769@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4825513@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8309419@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4071732@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8933530@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8149854@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2571317@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3891346@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2965444@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9491585@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3117921@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8103536@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5589203@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4178107@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3848884@ptit.edu.vn" source=console
+time="2026-04-07T13:18:14Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4982867@ptit.edu.vn" source=console
+
+running (1m15.6s), 100/100 VUs, 157 complete and 0 interrupted iterations
+default   [  60% ] 100 VUs  18.0s/30s
+time="2026-04-07T13:18:15Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8969837@ptit.edu.vn" source=console
+time="2026-04-07T13:18:15Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1064361@ptit.edu.vn" source=console
+time="2026-04-07T13:18:15Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6085638@ptit.edu.vn" source=console
+time="2026-04-07T13:18:15Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_726415@ptit.edu.vn" source=console
+time="2026-04-07T13:18:15Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2358890@ptit.edu.vn" source=console
+time="2026-04-07T13:18:15Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3691697@ptit.edu.vn" source=console
+time="2026-04-07T13:18:15Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7574364@ptit.edu.vn" source=console
+
+running (1m14.6s), 100/100 VUs, 194 complete and 0 interrupted iterations
+default   [  63% ] 100 VUs  19.0s/30s
+
+running (0m19.9s), 100/100 VUs, 207 complete and 0 interrupted iterations
+default   [  67% ] 100 VUs  20.0s/30s
+
+running (1m12.5s), 100/100 VUs, 207 complete and 0 interrupted iterations
+default   [  70% ] 100 VUs  21.0s/30s
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4388460@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2227845@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6478031@ptit.edu.vn" source=console
+
+running (0m22.0s), 100/100 VUs, 207 complete and 0 interrupted iterations
+default   [  73% ] 100 VUs  22.0s/30s
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1505134@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6365164@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2632982@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5069730@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6361772@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5126274@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2637651@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8836468@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9717333@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_667783@ptit.edu.vn" source=console
+time="2026-04-07T13:19:52Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_783169@ptit.edu.vn" source=console
+time="2026-04-07T13:18:19Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6580946@ptit.edu.vn" source=console
+time="2026-04-07T13:18:19Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_303132@ptit.edu.vn" source=console
+time="2026-04-07T13:18:19Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1469956@ptit.edu.vn" source=console
+time="2026-04-07T13:18:19Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2100987@ptit.edu.vn" source=console
+
+running (1m10.5s), 100/100 VUs, 208 complete and 0 interrupted iterations
+default   [  77% ] 100 VUs  23.0s/30s
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5245710@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1403666@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_914622@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6815654@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9769877@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5682444@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2345429@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2462848@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5760431@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8877904@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3655233@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6089841@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_773456@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8581937@ptit.edu.vn" source=console
+
+running (1m09.5s), 100/100 VUs, 219 complete and 0 interrupted iterations
+default   [  80% ] 100 VUs  24.0s/30s
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5153600@ptit.edu.vn" source=console
+time="2026-04-07T13:18:20Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2454076@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7180679@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5500283@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1668194@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8100649@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3000195@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1598297@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2204477@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1967031@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4286063@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5212939@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5160020@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9220093@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8170372@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8557361@ptit.edu.vn" source=console
+time="2026-04-07T13:18:21Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5095098@ptit.edu.vn" source=console
+
+running (1m08.5s), 100/100 VUs, 234 complete and 0 interrupted iterations
+default   [  83% ] 100 VUs  25.0s/30s
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4490605@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2317740@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4740674@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4739041@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5873817@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7942604@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6652430@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5153320@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3580560@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9041998@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6654545@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5427596@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6150221@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3726860@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5784608@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1294128@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9079173@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8612714@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_986153@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3783244@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2301346@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2129663@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1400288@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3794722@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1053630@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_548633@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7041449@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_649057@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5285817@ptit.edu.vn" source=console
+
+running (1m07.5s), 100/100 VUs, 247 complete and 0 interrupted iterations
+default   [  87% ] 100 VUs  26.0s/30s
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7843416@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2715187@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9449321@ptit.edu.vn" source=console
+time="2026-04-07T13:18:22Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_452980@ptit.edu.vn" source=console
+time="2026-04-07T13:18:23Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1124960@ptit.edu.vn" source=console
+time="2026-04-07T13:18:23Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8483268@ptit.edu.vn" source=console
+time="2026-04-07T13:18:23Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4411677@ptit.edu.vn" source=console
+time="2026-04-07T13:18:23Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9748222@ptit.edu.vn" source=console
+time="2026-04-07T13:18:23Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1416870@ptit.edu.vn" source=console
+time="2026-04-07T13:18:23Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2597815@ptit.edu.vn" source=console
+time="2026-04-07T13:18:23Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4618890@ptit.edu.vn" source=console
+time="2026-04-07T13:18:23Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8721364@ptit.edu.vn" source=console
+time="2026-04-07T13:18:23Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9113990@ptit.edu.vn" source=console
+time="2026-04-07T13:19:57Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9475835@ptit.edu.vn" source=console
+time="2026-04-07T13:19:57Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5176746@ptit.edu.vn" source=console
+time="2026-04-07T13:19:57Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6824359@ptit.edu.vn" source=console
+time="2026-04-07T13:19:57Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8661329@ptit.edu.vn" source=console
+time="2026-04-07T13:19:57Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2309328@ptit.edu.vn" source=console
+time="2026-04-07T13:19:57Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1566602@ptit.edu.vn" source=console
+time="2026-04-07T13:19:57Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5844269@ptit.edu.vn" source=console
+time="2026-04-07T13:19:57Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5737488@ptit.edu.vn" source=console
+
+running (1m06.5s), 100/100 VUs, 278 complete and 0 interrupted iterations
+default   [  90% ] 100 VUs  27.0s/30s
+time="2026-04-07T13:18:24Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6768870@ptit.edu.vn" source=console
+time="2026-04-07T13:18:24Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3092222@ptit.edu.vn" source=console
+time="2026-04-07T13:18:24Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6068310@ptit.edu.vn" source=console
+time="2026-04-07T13:18:24Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6143541@ptit.edu.vn" source=console
+
+running (1m05.5s), 100/100 VUs, 306 complete and 0 interrupted iterations
+default   [  93% ] 100 VUs  28.0s/30s
+time="2026-04-07T13:18:24Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1252232@ptit.edu.vn" source=console
+time="2026-04-07T13:18:25Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5992647@ptit.edu.vn" source=console
+time="2026-04-07T13:18:25Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1383751@ptit.edu.vn" source=console
+time="2026-04-07T13:18:25Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1134559@ptit.edu.vn" source=console
+
+running (1m04.5s), 100/100 VUs, 307 complete and 0 interrupted iterations
+default   [  97% ] 100 VUs  29.0s/30s
+time="2026-04-07T13:18:26Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_322365@ptit.edu.vn" source=console
+time="2026-04-07T13:18:26Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1530020@ptit.edu.vn" source=console
+time="2026-04-07T13:18:26Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9145329@ptit.edu.vn" source=console
+
+running (1m03.5s), 100/100 VUs, 314 complete and 0 interrupted iterations
+default   [ 100% ] 100 VUs  30.0s/30s
+time="2026-04-07T13:18:27Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8793936@ptit.edu.vn" source=console
+time="2026-04-07T13:18:27Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9603895@ptit.edu.vn" source=console
+
+running (1m02.5s), 099/100 VUs, 315 complete and 0 interrupted iterations
+default ↓ [ 100% ] 100 VUs  30s
+time="2026-04-07T13:18:27Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2028248@ptit.edu.vn" source=console
+time="2026-04-07T13:18:28Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6504280@ptit.edu.vn" source=console
+time="2026-04-07T13:18:28Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2223314@ptit.edu.vn" source=console
+time="2026-04-07T13:18:28Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4011150@ptit.edu.vn" source=console
+time="2026-04-07T13:18:28Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5142847@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8620611@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1468422@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5729681@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8945102@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3335440@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7994461@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1003680@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6883080@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9940331@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7657190@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2201511@ptit.edu.vn" source=console
+
+running (0m32.0s), 097/100 VUs, 317 complete and 0 interrupted iterations
+default ↓ [ 100% ] 100 VUs  30s
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3802652@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3629994@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8699984@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5775078@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7366211@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5514124@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4365808@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1577150@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9037619@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6118919@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3234740@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4374545@ptit.edu.vn" source=console
+time="2026-04-07T13:20:02Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5033277@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9733075@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1186041@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7037093@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2483412@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7960001@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9878602@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1010479@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8806357@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7712010@ptit.edu.vn" source=console
+
+running (0m33.0s), 090/100 VUs, 324 complete and 0 interrupted iterations
+default ↓ [ 100% ] 100 VUs  30s
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5326641@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7855380@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6974069@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3817396@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1675391@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3631030@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4294023@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3460043@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4258235@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8914486@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4573418@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_893093@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9336401@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2299905@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2169636@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8598706@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_445780@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7034922@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8257243@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_437287@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8899206@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8634376@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9629775@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_107053@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8456511@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7344104@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9005054@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2644165@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9306086@ptit.edu.vn" source=console
+time="2026-04-07T13:20:03Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6982181@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4352273@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6884050@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_654272@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2984279@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5283106@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8908299@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2683883@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6282466@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4981023@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1872557@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_492213@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3801500@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7881239@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_1269378@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5468391@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_2396329@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9763954@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3043550@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_241245@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_8916048@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_5944401@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_3950552@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_4525513@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6018363@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_7322690@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_6856518@ptit.edu.vn" source=console
+time="2026-04-07T13:20:04Z" level=info msg="✅ [SUCCESS] Tài khoản đăng ký thành công: user_9916152@ptit.edu.vn" source=console
+
+running (0m34.0s), 073/100 VUs, 341 complete and 0 interrupted iterations
+default ↓ [ 100% ] 100 VUs  30s
+
+
+  █ THRESHOLDS 
+
+    http_req_duration
+    ✗ 'p(95)<2000' p(95)=1m39s
+
+    http_req_failed
+    ✓ 'rate<0.05' rate=0.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 828     23.75093/s
+    checks_succeeded...: 100.00% 828 out of 828
+    checks_failed......: 0.00%   0 out of 828
+
+    ✓ Register thành công (201)
+    ✓ Xem danh sách sản phẩm OK (200)
+
+    HTTP
+    http_req_duration..............: avg=13.88s min=-93380772242ns med=450.53ms max=1m42s  p(90)=1m39s p(95)=1m39s 
+      { expected_response:true }...: avg=13.88s min=-93380772242ns med=450.53ms max=1m42s  p(90)=1m39s p(95)=1m39s 
+    http_req_failed................: 0.00%  0 out of 828
+    http_reqs......................: 828    23.75093/s
+
+    EXECUTION
+    iteration_duration.............: avg=8.23s  min=4.63s          med=8.17s    max=13.85s p(90)=9.8s  p(95)=10.26s
+    iterations.....................: 414    11.875465/s
+    vus............................: 73     min=73       max=100
+    vus_max........................: 100    min=100      max=100
+
+    NETWORK
+    data_received..................: 10 MB  296 kB/s
+    data_sent......................: 238 kB 6.8 kB/s
+
+
+
+
+running (0m34.9s), 000/100 VUs, 414 complete and 0 interrupted iterations
+default ✓ [ 100% ] 100 VUs  30s
+time="2026-04-07T13:20:05Z" level=error msg="thresholds on metrics 'http_req_duration' have been crossed"

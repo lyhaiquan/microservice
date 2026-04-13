@@ -1,0 +1,264 @@
+FAIL src/__tests__/auth.test.js (41.39 s)
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should register a new user successfully
+
+    MongoParseError: options usenewurlparser, useunifiedtopology are not supported
+
+      10 |     mongoServer = await MongoMemoryServer.create();
+      11 |     const uri = mongoServer.getUri();
+    > 12 |     await mongoose.connect(uri, {
+         |                    ^
+      13 |         useNewUrlParser: true,
+      14 |         useUnifiedTopology: true,
+      15 |     });
+
+      at parseOptions (node_modules/mongodb/src/connection_string.ts:364:11)
+      at new MongoClient (node_modules/mongodb/src/mongo_client.ts:421:32)
+      at NativeConnection.createClient (node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:334:14)
+      at NativeConnection.openUri (node_modules/mongoose/lib/connection.js:1074:34)
+      at Mongoose.connect (node_modules/mongoose/lib/mongoose.js:475:15)
+      at Object.connect (src/__tests__/auth.test.js:12:20)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should register a new user successfully
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      22 | });
+      23 |
+    > 24 | afterEach(async () => {
+         | ^
+      25 |     const collections = mongoose.connection.collections;
+      26 |     for (const key in collections) {
+      27 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:24:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should fail if email is already in use
+
+    MongoParseError: options usenewurlparser, useunifiedtopology are not supported
+
+      10 |     mongoServer = await MongoMemoryServer.create();
+      11 |     const uri = mongoServer.getUri();
+    > 12 |     await mongoose.connect(uri, {
+         |                    ^
+      13 |         useNewUrlParser: true,
+      14 |         useUnifiedTopology: true,
+      15 |     });
+
+      at parseOptions (node_modules/mongodb/src/connection_string.ts:364:11)
+      at new MongoClient (node_modules/mongodb/src/mongo_client.ts:421:32)
+      at NativeConnection.createClient (node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:334:14)
+      at NativeConnection.openUri (node_modules/mongoose/lib/connection.js:1074:34)
+      at Mongoose.connect (node_modules/mongoose/lib/mongoose.js:475:15)
+      at Object.connect (src/__tests__/auth.test.js:12:20)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should fail if email is already in use
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      22 | });
+      23 |
+    > 24 | afterEach(async () => {
+         | ^
+      25 |     const collections = mongoose.connection.collections;
+      26 |     for (const key in collections) {
+      27 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:24:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should fail if required fields are missing
+
+    MongoParseError: options usenewurlparser, useunifiedtopology are not supported
+
+      10 |     mongoServer = await MongoMemoryServer.create();
+      11 |     const uri = mongoServer.getUri();
+    > 12 |     await mongoose.connect(uri, {
+         |                    ^
+      13 |         useNewUrlParser: true,
+      14 |         useUnifiedTopology: true,
+      15 |     });
+
+      at parseOptions (node_modules/mongodb/src/connection_string.ts:364:11)
+      at new MongoClient (node_modules/mongodb/src/mongo_client.ts:421:32)
+      at NativeConnection.createClient (node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:334:14)
+      at NativeConnection.openUri (node_modules/mongoose/lib/connection.js:1074:34)
+      at Mongoose.connect (node_modules/mongoose/lib/mongoose.js:475:15)
+      at Object.connect (src/__tests__/auth.test.js:12:20)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should fail if required fields are missing
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      22 | });
+      23 |
+    > 24 | afterEach(async () => {
+         | ^
+      25 |     const collections = mongoose.connection.collections;
+      26 |     for (const key in collections) {
+      27 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:24:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should login an existing user successfully
+
+    MongoParseError: options usenewurlparser, useunifiedtopology are not supported
+
+      10 |     mongoServer = await MongoMemoryServer.create();
+      11 |     const uri = mongoServer.getUri();
+    > 12 |     await mongoose.connect(uri, {
+         |                    ^
+      13 |         useNewUrlParser: true,
+      14 |         useUnifiedTopology: true,
+      15 |     });
+
+      at parseOptions (node_modules/mongodb/src/connection_string.ts:364:11)
+      at new MongoClient (node_modules/mongodb/src/mongo_client.ts:421:32)
+      at NativeConnection.createClient (node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:334:14)
+      at NativeConnection.openUri (node_modules/mongoose/lib/connection.js:1074:34)
+      at Mongoose.connect (node_modules/mongoose/lib/mongoose.js:475:15)
+      at Object.connect (src/__tests__/auth.test.js:12:20)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should login an existing user successfully
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      22 | });
+      23 |
+    > 24 | afterEach(async () => {
+         | ^
+      25 |     const collections = mongoose.connection.collections;
+      26 |     for (const key in collections) {
+      27 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:24:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail with invalid password
+
+    MongoParseError: options usenewurlparser, useunifiedtopology are not supported
+
+      10 |     mongoServer = await MongoMemoryServer.create();
+      11 |     const uri = mongoServer.getUri();
+    > 12 |     await mongoose.connect(uri, {
+         |                    ^
+      13 |         useNewUrlParser: true,
+      14 |         useUnifiedTopology: true,
+      15 |     });
+
+      at parseOptions (node_modules/mongodb/src/connection_string.ts:364:11)
+      at new MongoClient (node_modules/mongodb/src/mongo_client.ts:421:32)
+      at NativeConnection.createClient (node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:334:14)
+      at NativeConnection.openUri (node_modules/mongoose/lib/connection.js:1074:34)
+      at Mongoose.connect (node_modules/mongoose/lib/mongoose.js:475:15)
+      at Object.connect (src/__tests__/auth.test.js:12:20)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail with invalid password
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      22 | });
+      23 |
+    > 24 | afterEach(async () => {
+         | ^
+      25 |     const collections = mongoose.connection.collections;
+      26 |     for (const key in collections) {
+      27 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:24:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail if user does not exist
+
+    MongoParseError: options usenewurlparser, useunifiedtopology are not supported
+
+      10 |     mongoServer = await MongoMemoryServer.create();
+      11 |     const uri = mongoServer.getUri();
+    > 12 |     await mongoose.connect(uri, {
+         |                    ^
+      13 |         useNewUrlParser: true,
+      14 |         useUnifiedTopology: true,
+      15 |     });
+
+      at parseOptions (node_modules/mongodb/src/connection_string.ts:364:11)
+      at new MongoClient (node_modules/mongodb/src/mongo_client.ts:421:32)
+      at NativeConnection.createClient (node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:334:14)
+      at NativeConnection.openUri (node_modules/mongoose/lib/connection.js:1074:34)
+      at Mongoose.connect (node_modules/mongoose/lib/mongoose.js:475:15)
+      at Object.connect (src/__tests__/auth.test.js:12:20)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail if user does not exist
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      22 | });
+      23 |
+    > 24 | afterEach(async () => {
+         | ^
+      25 |     const collections = mongoose.connection.collections;
+      26 |     for (const key in collections) {
+      27 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:24:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail if required fields are missing
+
+    MongoParseError: options usenewurlparser, useunifiedtopology are not supported
+
+      10 |     mongoServer = await MongoMemoryServer.create();
+      11 |     const uri = mongoServer.getUri();
+    > 12 |     await mongoose.connect(uri, {
+         |                    ^
+      13 |         useNewUrlParser: true,
+      14 |         useUnifiedTopology: true,
+      15 |     });
+
+      at parseOptions (node_modules/mongodb/src/connection_string.ts:364:11)
+      at new MongoClient (node_modules/mongodb/src/mongo_client.ts:421:32)
+      at NativeConnection.createClient (node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:334:14)
+      at NativeConnection.openUri (node_modules/mongoose/lib/connection.js:1074:34)
+      at Mongoose.connect (node_modules/mongoose/lib/mongoose.js:475:15)
+      at Object.connect (src/__tests__/auth.test.js:12:20)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail if required fields are missing
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      22 | });
+      23 |
+    > 24 | afterEach(async () => {
+         | ^
+      25 |     const collections = mongoose.connection.collections;
+      26 |     for (const key in collections) {
+      27 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:24:1)
+
+
+  ● Test suite failed to run
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      16 | });
+      17 |
+    > 18 | afterAll(async () => {
+         | ^
+      19 |     await mongoose.connection.dropDatabase();
+      20 |     await mongoose.connection.close();
+      21 |     await mongoServer.stop();
+
+      at Object.afterAll (src/__tests__/auth.test.js:18:1)
+
+Test Suites: 1 failed, 1 total
+Tests:       7 failed, 7 total
+Snapshots:   0 total
+Time:        41.458 s, estimated 43 s
+Ran all test suites.
+Jest did not exit one second after the test run has completed.
+
+'This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue.
+^C

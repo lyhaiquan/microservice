@@ -1,0 +1,86 @@
+Fixing MongoDB port configuration...
+Setting all services to use MongoDB on port 27011 (mongo1 - single node RS)
+  ✅ auth-service -> port 27011
+  ✅ product-service -> port 27011
+  ✅ cart-service -> port 27011
+  ✅ order-service -> port 27011
+  ✅ payment-service -> port 27011
+Cleaning up old processes...
+SUCCESS: The process "node.exe" with PID 6072 has been terminated.
+SUCCESS: The process "node.exe" with PID 19436 has been terminated.
+SUCCESS: The process "node.exe" with PID 9468 has been terminated.
+SUCCESS: The process "node.exe" with PID 29940 has been terminated.
+SUCCESS: The process "node.exe" with PID 5256 has been terminated.
+Starting microservices...
+Waiting 40 seconds for all services and Kafka consumers to initialize...
+[dotenv@17.3.1] injecting env (5) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.3.1] injecting env (5) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.3.1] injecting env (8) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+[dotenv@17.3.1] injecting env (5) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.3.1] injecting env (8) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+✅ MongoDB Connected...
+ Auth Service is running on port 5050
+✅ MongoDB Connected...
+✅ Redis connected successfully.
+🚀 Cart Service is running on port 5002
+✅ MongoDB Connected...
+🚀 Product Service is running on port 5001
+✅ MongoDB Connected...
+✅ Kafka Producer & Consumer connected successfully
+🚀 Payment Service is running on port 5004
+{"level":"INFO","timestamp":"2026-03-29T06:38:26.475Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"payment-group"}
+✅ MongoDB Connected...
+✅ Kafka Producer & Consumer connected successfully
+🚀 Order Service is running on port 5003
+{"level":"INFO","timestamp":"2026-03-29T06:38:26.511Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"order-group"}
+{"level":"INFO","timestamp":"2026-03-29T06:38:53.715Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"payment-group","memberId":"payment-service-d9872d6d-0e88-498e-859e-a0a0433459c2","leaderId":"payment-service-d9872d6d-0e88-498e-859e-a0a0433459c2","isLeader":true,"memberAssignment":{"order-events":[0]},"groupProtocol":"RoundRobinAssigner","duration":27238}
+{"level":"INFO","timestamp":"2026-03-29T06:38:53.716Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"order-group","memberId":"order-service-2e6b7891-c2fc-4e94-94ba-1dfaceee64cb","leaderId":"order-service-2e6b7891-c2fc-4e94-94ba-1dfaceee64cb","isLeader":true,"memberAssignment":{"payment-confirmed":[0]},"groupProtocol":"RoundRobinAssigner","duration":27204}
+Starting E2E test...
+🚀 Bắt đầu bài test E2E cho Web Shopee...
+
+Register skipped/failed: {"message":"User already exists"}
+[Step 1 (Auth)] ✅ PASS - Đăng nhập tester_01 thành công (Token: eyJhbGciOiJIUzI...)
+[Step 2 (Product)] ✅ PASS - Lấy danh sách thành công (1 SP). Chọn SP ID: 69c7a95af9a5677d7f8aaf60
+[Step 3 (Cart)] ✅ PASS - Thêm sản phẩm vào giỏ thành công
+✅ Event sent to 'order-events' for order 69c8c90a5cd8fafd56a2dc03
+[Step 4 (Order)] ✅ PASS - Tạo đơn hàng 69c8c90a5cd8fafd56a2dc03 thành công (PENDING)
+
+📦 [PAYMENT SERVICE] Nhận được order: 69c8c90a5cd8fafd56a2dc03 - Số tiền: 3000000
+
+⏳ Xin chờ 3 giây để Kafka xử lý events...
+(node:21732) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+🔗 [PAYMENT SERVICE] Link thanh toán VNPAY (Click vào đây để test Sandbox):
+[36mhttps://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=300000000&vnp_Command=pay&vnp_CreateDate=20260329133906&vnp_CurrCode=VND&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderInfo=Thanh+toan+don+hang+69c8c90a5cd8fafd56a2dc03&vnp_OrderType=other&vnp_ReturnUrl=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fpayments%2Fvnpay-return&vnp_TmnCode=GUHO01S5&vnp_TxnRef=69c8c90a5cd8fafd56a2dc03_133906&vnp_Version=2.1.0&vnp_SecureHash=ea0f1dca9f00f90b463034c49c4e9d7994b9d1fc46fc7548710c92bcfd3a720c58f473eecf04af2ebb25897fa0a24940f2ca4bf9e7441c706c150ecaeca9f6eb[0m
+--------------------------------------------------
+
+[Step 5 (Kafka & Payment)] ✅ PASS - URL VNPAY được sinh ra:
+   https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=300000000&vnp_Command=pay&vnp_CreateDate=20260329133906&vnp_CurrCode=VND&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderInfo=Thanh+toan+don+hang+69c8c90a5cd8fafd56a2dc03&vnp_OrderType=other&vnp_ReturnUrl=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fpayments%2Fvnpay-return&vnp_TmnCode=GUHO01S5&vnp_TxnRef=69c8c90a5cd8fafd56a2dc03_133906&vnp_Version=2.1.0&vnp_SecureHash=ea0f1dca9f00f90b463034c49c4e9d7994b9d1fc46fc7548710c92bcfd3a720c58f473eecf04af2ebb25897fa0a24940f2ca4bf9e7441c706c150ecaeca9f6eb
+(node:21732) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+✅ [PAYMENT SERVICE] Đã update thanh toán và bắn event payment-confirmed cho order: 69c8c90a5cd8fafd56a2dc03
+
+🔔 [ORDER SERVICE] Nhận sự kiện thanh toán: Order 69c8c90a5cd8fafd56a2dc03 - Status: PAID
+[Step 6 (Simulate Success)] ✅ PASS - Xác nhận thanh toán thành công (Mô phỏng VNPAY IPN trả về)
+
+⏳ Đợi 5 giây để Event payment-confirmed phản hồi về Order Service...
+(node:13092) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ [ORDER SERVICE] Đã cập nhật Order 69c8c90a5cd8fafd56a2dc03 thành PAID thành công.
+[Step 7 (Final Check)] ✅ PASS - Order 69c8c90a5cd8fafd56a2dc03 đã cập nhật trạng thái thành PAID
+
+=======================================
+🏁 TỔNG SẮP KẾT QUẢ CÁC SERVICES
+=======================================
+AUTH SERVICE    : ✅ OK
+PRODUCT SERVICE : ✅ OK
+CART SERVICE    : ✅ OK
+ORDER SERVICE   : ✅ OK
+PAYMENT SERVICE : ✅ OK
+=======================================
+Killing background microservices...
+{"level":"WARN","timestamp":"2026-03-29T07:22:50.567Z","logger":"kafkajs","message":"[RequestQueue] Response without match","clientId":"payment-service","broker":"127.0.0.1:9092","correlationId":58}
+{"level":"WARN","timestamp":"2026-03-29T07:22:53.234Z","logger":"kafkajs","message":"[RequestQueue] Response without match","clientId":"order-service","broker":"127.0.0.1:9092","correlationId":59}
+{"level":"WARN","timestamp":"2026-03-29T09:49:01.274Z","logger":"kafkajs","message":"[RequestQueue] Response without match","clientId":"payment-service","broker":"127.0.0.1:9092","correlationId":1716}
+{"level":"WARN","timestamp":"2026-03-29T09:49:03.998Z","logger":"kafkajs","message":"[RequestQueue] Response without match","clientId":"order-service","broker":"127.0.0.1:9092","correlationId":1717}
+{"level":"WARN","timestamp":"2026-03-29T11:37:50.601Z","logger":"kafkajs","message":"[RequestQueue] Response without match","clientId":"payment-service","broker":"127.0.0.1:9092","correlationId":2776}
+{"level":"WARN","timestamp":"2026-03-29T11:37:53.000Z","logger":"kafkajs","message":"[RequestQueue] Response without match","clientId":"order-service","broker":"127.0.0.1:9092","correlationId":2777}

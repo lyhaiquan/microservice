@@ -1,0 +1,2 @@
+[dotenv@17.3.1] injecting env (5) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+❌ Failed to start server: connect ECONNREFUSED 159.223.76.133:27017

@@ -1,0 +1,5 @@
+◇ injected env (5) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+DEBUG: authController.register type: function
+DEBUG: authController.login type: function
+✅ MongoDB Connected...
+ Auth Service is running on port 5050

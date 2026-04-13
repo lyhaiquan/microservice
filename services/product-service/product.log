@@ -1,0 +1,4 @@
+[dotenv@17.3.1] injecting env (5) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+✅ Redis connected successfully.
+✅ MongoDB Connected...
+🚀 Product Service is running on port 5001

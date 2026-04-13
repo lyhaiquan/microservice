@@ -1,0 +1,11 @@
+NETWORK ID     NAME                                DRIVER    SCOPE
+8f2c314c74be   bridge                              bridge    local
+d3a1e82169d7   csdlpt_ecom_default                 bridge    local
+d8cf58a78889   csdlpt_ecom_ecom-net                bridge    local
+4b5b9dfb1f4e   host                                host      local
+c3cf7d2d0b11   job-hunter-backend_job-hunter-net   bridge    local
+d5e3a35da907   microservice_default                bridge    local
+75d0024d2386   mitm-react-node-lab_labnet          bridge    local
+b7c7916f2980   none                                null      local
+acc5b03b96d2   shopee-network                      bridge    local
+c6b132d0f2c8   smart-ai_default                    bridge    local

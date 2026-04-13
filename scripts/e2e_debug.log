@@ -1,0 +1,60 @@
+Fixing MongoDB port configuration...
+Setting all services to use MongoDB on port 27011 (mongo1 - single node RS)
+  ✅ auth-service -> port 27011
+  ✅ product-service -> port 27011
+  ✅ cart-service -> port 27011
+  ✅ order-service -> port 27011
+  ✅ payment-service -> port 27011
+Cleaning up old processes...
+SUCCESS: The process "node.exe" with PID 10620 has been terminated.
+SUCCESS: The process "node.exe" with PID 11036 has been terminated.
+SUCCESS: The process "node.exe" with PID 19660 has been terminated.
+SUCCESS: The process "node.exe" with PID 2192 has been terminated.
+SUCCESS: The process "node.exe" with PID 15792 has been terminated.
+Starting microservices...
+Waiting 40 seconds for all services and Kafka consumers to initialize...
+[dotenv@17.3.1] injecting env (5) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.3.1] injecting env (5) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.3.1] injecting env (8) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.3.1] injecting env (5) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.3.1] injecting env (8) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+✅ Redis connected successfully.
+✅ MongoDB Connected...
+✅ MongoDB Connected...
+🚀 Cart Service is running on port 5002
+ Auth Service is running on port 5050
+✅ MongoDB Connected...
+🚀 Product Service is running on port 5001
+✅ MongoDB Connected...
+✅ Kafka Producer & Consumer connected successfully
+✅ MongoDB Connected...
+🚀 Order Service is running on port 5003
+{"level":"INFO","timestamp":"2026-04-06T08:43:01.604Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"order-group"}
+✅ Kafka Producer & Consumer connected successfully
+🚀 Payment Service is running on port 5004
+{"level":"INFO","timestamp":"2026-04-06T08:43:01.647Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"payment-group"}
+{"level":"INFO","timestamp":"2026-04-06T08:43:27.391Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"order-group","memberId":"order-service-863ce9f5-7142-4ca7-8bb4-854e086eb8bc","leaderId":"order-service-863ce9f5-7142-4ca7-8bb4-854e086eb8bc","isLeader":true,"memberAssignment":{"payment-confirmed":[0]},"groupProtocol":"RoundRobinAssigner","duration":25782}
+{"level":"INFO","timestamp":"2026-04-06T08:43:27.391Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"payment-group","memberId":"payment-service-0e071bb3-7d9b-4e2d-a939-dc5f538c875e","leaderId":"payment-service-0e071bb3-7d9b-4e2d-a939-dc5f538c875e","isLeader":true,"memberAssignment":{"order-events":[0]},"groupProtocol":"RoundRobinAssigner","duration":25742}
+Starting E2E test...
+🚀 Bắt đầu bài test E2E cho Web Shopee...
+
+Register skipped/failed: {"message":"User already exists"}
+[Step 1 (Auth)] ✅ PASS - Đăng nhập tester_01 thành công (Token: eyJhbGciOiJIUzI...)
+[Step 2 (Product)] ❌ FAIL - Danh sách sản phẩm trống
+[Step 3 (Cart)] ❌ FAIL - Lỗi thêm giỏ hàng: Missing userId, productId or quantity
+Error: Order validation failed: items.0.productId: Path `productId` is required.
+[Step 4 (Order)] ❌ FAIL - Lỗi tạo đơn: Order validation failed: items.0.productId: Path `productId` is required.
+[Step 5 (Kafka & Payment)] ❌ FAIL - Không có orderId do lỗi bước trước
+[Step 6 (Simulate Success)] ❌ FAIL - Bỏ qua do không có orderId
+[Step 7 (Final Check)] ❌ FAIL - Bỏ qua do không có orderId
+
+=======================================
+🏁 TỔNG SẮP KẾT QUẢ CÁC SERVICES
+=======================================
+AUTH SERVICE    : ✅ OK
+PRODUCT SERVICE : ❌ LỖI
+CART SERVICE    : ❌ LỖI
+ORDER SERVICE   : ❌ LỖI
+PAYMENT SERVICE : ❌ LỖI
+=======================================
+Killing background microservices...

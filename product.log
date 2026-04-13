@@ -1,0 +1,3 @@
+[dotenv@17.3.1] injecting env (5) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+✅ Redis connected successfully.
+❌ Failed to start server: connect ECONNREFUSED 159.223.76.133:27017

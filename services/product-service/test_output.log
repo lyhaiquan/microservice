@@ -1,0 +1,25 @@
+
+> product-service@1.0.0 test
+> jest --runInBand --detectOpenHandles
+
+FAIL src/__tests__/product.cache.test.js
+  ● Test suite failed to run
+
+    Cannot find module 'mongodb-memory-server' from 'src/__tests__/product.cache.test.js'
+
+    [0m [90m 1 |[39m [36mconst[39m request [33m=[39m require([32m'supertest'[39m)[33m;[39m
+     [90m 2 |[39m [36mconst[39m mongoose [33m=[39m require([32m'mongoose'[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 3 |[39m [36mconst[39m { [33mMongoMemoryServer[39m } [33m=[39m require([32m'mongodb-memory-server'[39m)[33m;[39m
+     [90m   |[39m                               [31m[1m^[22m[39m
+     [90m 4 |[39m [36mconst[39m [33mRedis[39m [33m=[39m require([32m'ioredis'[39m)[33m;[39m
+     [90m 5 |[39m [36mconst[39m [33mRedisMock[39m [33m=[39m require([32m'ioredis-mock'[39m)[33m;[39m
+     [90m 6 |[39m[0m
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:863:11)
+      at Object.require (src/__tests__/product.cache.test.js:3:31)
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        0.594 s
+Ran all test suites.

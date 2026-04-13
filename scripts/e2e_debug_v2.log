@@ -1,0 +1,80 @@
+Fixing MongoDB port configuration...
+Setting all services to use MongoDB on port 27011 (mongo1 - single node RS)
+  ✅ auth-service -> port 27011
+  ✅ product-service -> port 27011
+  ✅ cart-service -> port 27011
+  ✅ order-service -> port 27011
+  ✅ payment-service -> port 27011
+Cleaning up old processes...
+SUCCESS: The process "node.exe" with PID 20212 has been terminated.
+SUCCESS: The process "node.exe" with PID 7828 has been terminated.
+SUCCESS: The process "node.exe" with PID 25048 has been terminated.
+SUCCESS: The process "node.exe" with PID 25744 has been terminated.
+SUCCESS: The process "node.exe" with PID 2732 has been terminated.
+Starting microservices...
+Waiting 40 seconds for all services and Kafka consumers to initialize...
+[dotenv@17.3.1] injecting env (5) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.3.1] injecting env (5) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.3.1] injecting env (8) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.3.1] injecting env (5) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.3.1] injecting env (8) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+✅ MongoDB Connected...
+ Auth Service is running on port 5050
+✅ Redis connected successfully.
+✅ MongoDB Connected...
+🚀 Cart Service is running on port 5002
+✅ MongoDB Connected...
+🚀 Product Service is running on port 5001
+✅ MongoDB Connected...
+✅ MongoDB Connected...
+✅ Kafka Producer & Consumer connected successfully
+🚀 Payment Service is running on port 5004
+✅ Kafka Producer & Consumer connected successfully
+{"level":"INFO","timestamp":"2026-04-06T08:44:48.823Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"payment-group"}
+🚀 Order Service is running on port 5003
+{"level":"INFO","timestamp":"2026-04-06T08:44:48.837Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"order-group"}
+{"level":"INFO","timestamp":"2026-04-06T08:45:12.701Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"payment-group","memberId":"payment-service-86468cbc-7624-4163-911d-b985c4f68753","leaderId":"payment-service-86468cbc-7624-4163-911d-b985c4f68753","isLeader":true,"memberAssignment":{"order-events":[0]},"groupProtocol":"RoundRobinAssigner","duration":23875}
+{"level":"INFO","timestamp":"2026-04-06T08:45:12.701Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"order-group","memberId":"order-service-216dc7e4-a41d-4765-9623-2aa747d5dc16","leaderId":"order-service-216dc7e4-a41d-4765-9623-2aa747d5dc16","isLeader":true,"memberAssignment":{"payment-confirmed":[0]},"groupProtocol":"RoundRobinAssigner","duration":23861}
+Starting E2E test...
+🚀 Bắt đầu bài test E2E cho Web Shopee...
+
+Register skipped/failed: {"message":"User already exists"}
+[Step 1 (Auth)] ✅ PASS - Đăng nhập tester_01 thành công (Token: eyJhbGciOiJIUzI...)
+[Step 2 (Product)] ✅ PASS - Lấy danh sách thành công (1 SP). Chọn SP ID: 69d372a8881039c5269b1213
+[Step 3 (Cart)] ✅ PASS - Thêm sản phẩm vào giỏ thành công
+✅ Event sent to 'order-events' for order 69d372a825125de77998d390
+[Step 4 (Order)] ✅ PASS - Tạo đơn hàng 69d372a825125de77998d390 thành công (PENDING)
+
+📦 [PAYMENT SERVICE] Nhận được order: 69d372a825125de77998d390 - Số tiền: 3000000
+(node:25544) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+🔗 [PAYMENT SERVICE] Link thanh toán VNPAY (Click vào đây để test Sandbox):
+[36mhttps://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=300000000&vnp_Command=pay&vnp_CreateDate=20260406154528&vnp_CurrCode=VND&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderInfo=Thanh+toan+don+hang+69d372a825125de77998d390&vnp_OrderType=other&vnp_ReturnUrl=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fpayments%2Fvnpay-return&vnp_TmnCode=GUHO01S5&vnp_TxnRef=69d372a825125de77998d390_154528&vnp_Version=2.1.0&vnp_SecureHash=798926a60ce226f5e76374a18a21d9c1f606487d35c60a4bf731d0c0fe78568282e2b30995a4ed67462c41bf9dca2c51e7640ba9995f72db2d8b2c8df58d416b[0m
+--------------------------------------------------
+
+
+⏳ Xin chờ 3 giây để Kafka xử lý events...
+[Step 5 (Kafka & Payment)] ✅ PASS - URL VNPAY được sinh ra:
+   https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=300000000&vnp_Command=pay&vnp_CreateDate=20260406154528&vnp_CurrCode=VND&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderInfo=Thanh+toan+don+hang+69d372a825125de77998d390&vnp_OrderType=other&vnp_ReturnUrl=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fpayments%2Fvnpay-return&vnp_TmnCode=GUHO01S5&vnp_TxnRef=69d372a825125de77998d390_154528&vnp_Version=2.1.0&vnp_SecureHash=798926a60ce226f5e76374a18a21d9c1f606487d35c60a4bf731d0c0fe78568282e2b30995a4ed67462c41bf9dca2c51e7640ba9995f72db2d8b2c8df58d416b
+(node:25544) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+✅ [PAYMENT SERVICE] Đã update thanh toán và bắn event payment-confirmed cho order: 69d372a825125de77998d390
+
+🔔 [ORDER SERVICE] Nhận sự kiện thanh toán: Order 69d372a825125de77998d390 - Status: PAID
+[Step 6 (Simulate Success)] ✅ PASS - Xác nhận thanh toán thành công (Mô phỏng VNPAY IPN trả về)
+
+⏳ Đợi 5 giây để Event payment-confirmed phản hồi về Order Service...
+(node:26716) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ [ORDER SERVICE] Đã cập nhật Order 69d372a825125de77998d390 thành PAID thành công.
+[Step 7 (Final Check)] ✅ PASS - Order 69d372a825125de77998d390 đã cập nhật trạng thái thành PAID
+
+=======================================
+🏁 TỔNG SẮP KẾT QUẢ CÁC SERVICES
+=======================================
+AUTH SERVICE    : ✅ OK
+PRODUCT SERVICE : ✅ OK
+CART SERVICE    : ✅ OK
+ORDER SERVICE   : ✅ OK
+PAYMENT SERVICE : ✅ OK
+=======================================
+Killing background microservices...

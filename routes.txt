@@ -1,0 +1,5 @@
+services/auth-service/src/routes/auth.routes.js
+services/cart-service/src/routes/cart.routes.js
+services/order-service/src/routes/order.routes.js
+services/payment-service/src/routes/payment.routes.js
+services/product-service/src/routes/product.routes.js

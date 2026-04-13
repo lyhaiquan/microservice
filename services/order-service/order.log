@@ -1,0 +1,6 @@
+[dotenv@17.3.1] injecting env (5) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+✅ MongoDB Connected...
+✅ Kafka Producer & Consumer connected successfully
+🚀 Order Service is running on port 5003
+{"level":"INFO","timestamp":"2026-04-08T08:30:02.010Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"order-group"}
+{"level":"INFO","timestamp":"2026-04-08T08:30:27.202Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"order-group","memberId":"order-service-85792bc4-708d-493a-ac2f-694d7c3d3c3f","leaderId":"order-service-85792bc4-708d-493a-ac2f-694d7c3d3c3f","isLeader":true,"memberAssignment":{"payment-confirmed":[0]},"groupProtocol":"RoundRobinAssigner","duration":25189}

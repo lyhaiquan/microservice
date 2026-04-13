@@ -1,0 +1,226 @@
+FAIL src/__tests__/auth.test.js (41.144 s)
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should register a new user successfully
+
+    ReferenceError: uri is not defined
+
+       9 | beforeAll(async () => {
+      10 |     mongoServer = await MongoMemoryServer.create();
+    > 11 |     await mongoose.connect(uri);
+         |                            ^
+      12 | });
+      13 |
+      14 | afterAll(async () => {
+
+      at Object.uri (src/__tests__/auth.test.js:11:28)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should register a new user successfully
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      18 | });
+      19 |
+    > 20 | afterEach(async () => {
+         | ^
+      21 |     const collections = mongoose.connection.collections;
+      22 |     for (const key in collections) {
+      23 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:20:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should fail if email is already in use
+
+    ReferenceError: uri is not defined
+
+       9 | beforeAll(async () => {
+      10 |     mongoServer = await MongoMemoryServer.create();
+    > 11 |     await mongoose.connect(uri);
+         |                            ^
+      12 | });
+      13 |
+      14 | afterAll(async () => {
+
+      at Object.uri (src/__tests__/auth.test.js:11:28)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should fail if email is already in use
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      18 | });
+      19 |
+    > 20 | afterEach(async () => {
+         | ^
+      21 |     const collections = mongoose.connection.collections;
+      22 |     for (const key in collections) {
+      23 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:20:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should fail if required fields are missing
+
+    ReferenceError: uri is not defined
+
+       9 | beforeAll(async () => {
+      10 |     mongoServer = await MongoMemoryServer.create();
+    > 11 |     await mongoose.connect(uri);
+         |                            ^
+      12 | });
+      13 |
+      14 | afterAll(async () => {
+
+      at Object.uri (src/__tests__/auth.test.js:11:28)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/register › should fail if required fields are missing
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      18 | });
+      19 |
+    > 20 | afterEach(async () => {
+         | ^
+      21 |     const collections = mongoose.connection.collections;
+      22 |     for (const key in collections) {
+      23 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:20:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should login an existing user successfully
+
+    ReferenceError: uri is not defined
+
+       9 | beforeAll(async () => {
+      10 |     mongoServer = await MongoMemoryServer.create();
+    > 11 |     await mongoose.connect(uri);
+         |                            ^
+      12 | });
+      13 |
+      14 | afterAll(async () => {
+
+      at Object.uri (src/__tests__/auth.test.js:11:28)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should login an existing user successfully
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      18 | });
+      19 |
+    > 20 | afterEach(async () => {
+         | ^
+      21 |     const collections = mongoose.connection.collections;
+      22 |     for (const key in collections) {
+      23 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:20:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail with invalid password
+
+    ReferenceError: uri is not defined
+
+       9 | beforeAll(async () => {
+      10 |     mongoServer = await MongoMemoryServer.create();
+    > 11 |     await mongoose.connect(uri);
+         |                            ^
+      12 | });
+      13 |
+      14 | afterAll(async () => {
+
+      at Object.uri (src/__tests__/auth.test.js:11:28)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail with invalid password
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      18 | });
+      19 |
+    > 20 | afterEach(async () => {
+         | ^
+      21 |     const collections = mongoose.connection.collections;
+      22 |     for (const key in collections) {
+      23 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:20:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail if user does not exist
+
+    ReferenceError: uri is not defined
+
+       9 | beforeAll(async () => {
+      10 |     mongoServer = await MongoMemoryServer.create();
+    > 11 |     await mongoose.connect(uri);
+         |                            ^
+      12 | });
+      13 |
+      14 | afterAll(async () => {
+
+      at Object.uri (src/__tests__/auth.test.js:11:28)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail if user does not exist
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      18 | });
+      19 |
+    > 20 | afterEach(async () => {
+         | ^
+      21 |     const collections = mongoose.connection.collections;
+      22 |     for (const key in collections) {
+      23 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:20:1)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail if required fields are missing
+
+    ReferenceError: uri is not defined
+
+       9 | beforeAll(async () => {
+      10 |     mongoServer = await MongoMemoryServer.create();
+    > 11 |     await mongoose.connect(uri);
+         |                            ^
+      12 | });
+      13 |
+      14 | afterAll(async () => {
+
+      at Object.uri (src/__tests__/auth.test.js:11:28)
+
+  ● Auth Service - Register and Login APIs › POST /api/auth/login › should fail if required fields are missing
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      18 | });
+      19 |
+    > 20 | afterEach(async () => {
+         | ^
+      21 |     const collections = mongoose.connection.collections;
+      22 |     for (const key in collections) {
+      23 |         const collection = collections[key];
+
+      at Object.afterEach (src/__tests__/auth.test.js:20:1)
+
+
+  ● Test suite failed to run
+
+    thrown: "Exceeded timeout of 5000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      12 | });
+      13 |
+    > 14 | afterAll(async () => {
+         | ^
+      15 |     await mongoose.connection.dropDatabase();
+      16 |     await mongoose.connection.close();
+      17 |     await mongoServer.stop();
+
+      at Object.afterAll (src/__tests__/auth.test.js:14:1)
+
+Test Suites: 1 failed, 1 total
+Tests:       7 failed, 7 total
+Snapshots:   0 total
+Time:        41.196 s, estimated 42 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

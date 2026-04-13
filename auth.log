@@ -1,0 +1,44 @@
+◇ injected env (5) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+DEBUG: authController.register type: function
+DEBUG: authController.login type: function
+Failed to start server: MongooseServerSelectionError: connect ECONNREFUSED 159.223.76.133:27017
+    at _handleConnectionErrors (D:\Shopee-Microservices\services\auth-service\node_modules\mongoose\lib\connection.js:1180:11)
+    at NativeConnection.openUri (D:\Shopee-Microservices\services\auth-service\node_modules\mongoose\lib\connection.js:1111:11)
+    at async startServer (D:\Shopee-Microservices\services\auth-service\src\server.js:13:9) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'mongo1:27017' => [ServerDescription],
+      'mongo2:27017' => [ServerDescription],
+      'mongo3:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'dbrs',
+    maxElectionId: new ObjectId('7fffffff0000000000000006'),
+    maxSetVersion: 1,
+    commonWireVersion: 17,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  cause: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'mongo1:27017' => [ServerDescription],
+      'mongo2:27017' => [ServerDescription],
+      'mongo3:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'dbrs',
+    maxElectionId: new ObjectId('7fffffff0000000000000006'),
+    maxSetVersion: 1,
+    commonWireVersion: 17,
+    logicalSessionTimeoutMinutes: null
+  }
+}
