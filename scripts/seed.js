@@ -19,7 +19,7 @@ const mongoose = require('mongoose');
 
 // ─── CẤU HÌNH ────────────────────────────────────────────────
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27011/shopee?replicaSet=dbrs';
-const DUMMYJSON_URL = 'https://dummyjson.com/products?limit=50';
+const DUMMYJSON_URL = 'https://dummyjson.com/products?limit=0';
 
 // Thay bằng userId thật sau khi đăng ký (phải là ObjectId hợp lệ 24 hex chars)
 // Nếu chưa có, script sẽ tự tạo một ObjectId giả lập để demo
