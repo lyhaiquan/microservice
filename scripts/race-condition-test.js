@@ -3,12 +3,12 @@
  *  RACE CONDITION TEST — Atomic Inventory Check
  * ============================================================
  * 
- *  Kịch bản:
+ *  Kịch bản (SAGA Saga Version):
  *    1. Reset sản phẩm A → quantity = 1
  *    2. Xóa tất cả orders cũ
- *    3. Gửi đồng thời 10 request POST /api/orders (Promise.all)
- *    4. Kiểm tra kết quả: Chỉ ĐÚNG 1 request thành công (201)
- *    5. Verify database: quantity = 0, orders count = 1
+ *    3. Gửi đồng thời 10 request POST /api/orders (Sẽ nhận 201 Created hết vì API Async)
+ *    4. Đợi Kafka & Hệ thống đền bù (Compensating Transactions) chạy xong
+ *    5. Verify database: 1 đơn PENDING, 9 đơn CANCELLED, và quantity = 0
  * 
  *  Yêu cầu:
  *    - Docker containers đang chạy (MongoDB, Kafka, Redis)
@@ -215,17 +215,19 @@ async function verifyDatabase(productId) {
 
         const product = await db.collection('products').findOne({ _id: new ObjectId(productId) });
         const finalStock = product ? product.quantity : 'N/A';
-        const ordersCount = await db.collection('orders').countDocuments({});
+        const pendingCount = await db.collection('orders').countDocuments({ status: 'PENDING' });
+        const cancelledCount = await db.collection('orders').countDocuments({ status: 'CANCELLED' });
+        const totalCount = await db.collection('orders').countDocuments({});
 
         log('📦', `Tồn kho còn lại: ${finalStock}`);
-        log('📝', `Số orders trong DB: ${ordersCount}`);
+        log('📝', `Tổng đơn hàng lập: ${totalCount} (Chi tiết: ${pendingCount} Pending, ${cancelledCount} Cancelled)`);
 
         await client.close();
-        return { finalStock, ordersCount };
+        return { finalStock, pendingCount, cancelledCount, totalCount };
     } catch (error) {
         console.error(`\n${colors.red}  ❌ Lỗi verify database: ${error.message}${colors.reset}`);
         await client.close().catch(() => {});
-        return { finalStock: -1, ordersCount: -1 };
+        return { finalStock: -1, pendingCount: -1, cancelledCount: -1, totalCount: -1 };
     }
 }
 
@@ -243,24 +245,29 @@ function printVerdict(results, dbState) {
     console.log(`    │ ${colors.bold}Metric${colors.reset}                           │ ${colors.bold}Value${colors.reset}     │`);
     console.log(`    ├──────────────────────────────────┼───────────┤`);
     console.log(`    │ 🟢 Requests thành công (201)      │     ${colors.green}${String(successCount).padStart(2)}${colors.reset}    │`);
-    console.log(`    │ 🔴 Requests bị từ chối (400)      │     ${colors.red}${String(failedCount).padStart(2)}${colors.reset}    │`);
-    console.log(`    │ ⚫ Requests lỗi khác              │     ${String(errorCount).padStart(2)}    │`);
+    console.log(`    │ 🔴 Requests lỗi máy chủ           │     ${colors.red}${String(errorCount).padStart(2)}${colors.reset}    │`);
     console.log(`    ├──────────────────────────────────┼───────────┤`);
     console.log(`    │ 📦 Tồn kho DB (expected: 0)       │     ${dbState.finalStock === 0 ? colors.green : colors.red}${String(dbState.finalStock).padStart(2)}${colors.reset}    │`);
-    console.log(`    │ 📝 Orders DB (expected: 1)         │     ${dbState.ordersCount === 1 ? colors.green : colors.red}${String(dbState.ordersCount).padStart(2)}${colors.reset}    │`);
+    console.log(`    │ 📝 Đơn Pending (expected: 1)       │     ${dbState.pendingCount === 1 ? colors.green : colors.red}${String(dbState.pendingCount).padStart(2)}${colors.reset}    │`);
+    console.log(`    │ 🗑️ Đơn Cancelled (expected: ${CONCURRENT_REQUESTS - 1})      │     ${dbState.cancelledCount === CONCURRENT_REQUESTS - 1 ? colors.green : colors.red}${String(dbState.cancelledCount).padStart(2)}${colors.reset}    │`);
     console.log(`    └──────────────────────────────────┴───────────┘`);
     console.log('');
 
     const assertions = [
         {
-            name: 'Chỉ ĐÚNG 1 request thành công (201)',
-            pass: successCount === 1,
-            detail: `Expected: 1, Got: ${successCount}`,
+            name: 'API phản hồi nhanh nhẹn (Tất cả nhận 201 Created)',
+            pass: successCount === CONCURRENT_REQUESTS,
+            detail: `Expected: ${CONCURRENT_REQUESTS}, Got: ${successCount}`,
         },
         {
-            name: `Đúng ${CONCURRENT_REQUESTS - 1} request bị từ chối (400)`,
-            pass: failedCount === CONCURRENT_REQUESTS - 1,
-            detail: `Expected: ${CONCURRENT_REQUESTS - 1}, Got: ${failedCount}`,
+            name: 'Saga Compensate: Khoang vùng 1 đơn mua ĐÚNG',
+            pass: dbState.pendingCount === 1,
+            detail: `Đơn vị đếm PENDING. Expected: 1, Got: ${dbState.pendingCount}`,
+        },
+        {
+            name: 'Saga Compensate: Chủ động HỦY 9 đơn dư thừa',
+            pass: dbState.cancelledCount === CONCURRENT_REQUESTS - 1,
+            detail: `Đơn vị đếm CANCELLED. Expected: ${CONCURRENT_REQUESTS - 1}, Got: ${dbState.cancelledCount}`,
         },
         {
             name: 'Tồn kho DB = 0 (không âm, không dư)',
@@ -268,12 +275,7 @@ function printVerdict(results, dbState) {
             detail: `Expected: 0, Got: ${dbState.finalStock}`,
         },
         {
-            name: 'Chỉ có 1 order trong DB',
-            pass: dbState.ordersCount === 1,
-            detail: `Expected: 1, Got: ${dbState.ordersCount}`,
-        },
-        {
-            name: 'Không có overselling (stock không < 0)',
+            name: 'Sự an toàn tuyệt đối (Không Overselling)',
             pass: dbState.finalStock >= 0,
             detail: `Stock: ${dbState.finalStock}`,
         },
@@ -295,11 +297,11 @@ function printVerdict(results, dbState) {
     console.log('');
     console.log(`${colors.cyan}${'═'.repeat(60)}${colors.reset}`);
     if (allPassed) {
-        console.log(`${colors.green}${colors.bold}  🏆 VERDICT: PASS — Atomic Update hoạt động chính xác!${colors.reset}`);
-        console.log(`${colors.green}  → findOneAndUpdate({quantity: {$gte}}, {$inc}) chống Race Condition thành công.${colors.reset}`);
+        console.log(`${colors.green}${colors.bold}  🏆 VERDICT: PASS — Tín hiệu vũ trụ SAGA gửi về tuyệt hảo!${colors.reset}`);
+        console.log(`${colors.green}  → Kiến trúc giao tiếp Kafka + Rollback đền bù ngăn chặn Race Condition 100%.${colors.reset}`);
     } else {
-        console.log(`${colors.red}${colors.bold}  💀 VERDICT: FAIL — Phát hiện Race Condition / Overselling!${colors.reset}`);
-        console.log(`${colors.red}  → Atomic update KHÔNG hoạt động đúng. Kiểm tra lại logic decreaseStock.${colors.reset}`);
+        console.log(`${colors.red}${colors.bold}  💀 VERDICT: FAIL — Phát hiện Race Condition / Sai sót SAGA!${colors.reset}`);
+        console.log(`${colors.red}  → System Compensate (Luồng hủy đơn) có thể chưa hoạt động khớp với Eventual Consistency.${colors.reset}`);
     }
     console.log(`${colors.cyan}${'═'.repeat(60)}${colors.reset}\n`);
 
@@ -313,8 +315,8 @@ async function main() {
     console.clear();
     console.log(`\n${colors.bold}${colors.cyan}`);
     console.log(`    ╔══════════════════════════════════════════════════╗`);
-    console.log(`    ║       RACE CONDITION TEST — Atomic Inventory    ║`);
-    console.log(`    ║         ${CONCURRENT_REQUESTS} VUs × 1 Product (Stock: ${PRODUCT_STOCK})           ║`);
+    console.log(`    ║       RACE CONDITION TEST — SAGA PATTERN        ║`);
+    console.log(`    ║         ${CONCURRENT_REQUESTS} VUs × 1 Kho hàng (Stock: ${PRODUCT_STOCK})           ║`);
     console.log(`    ╚══════════════════════════════════════════════════╝`);
     console.log(`${colors.reset}`);
 

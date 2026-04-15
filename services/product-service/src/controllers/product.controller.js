@@ -54,12 +54,13 @@ class ProductController {
                 });
             }
 
-            // Cache Miss — chỉ lấy field cần thiết cho danh sách, dùng lean()
+            // Cache Miss — chỉ lấy field cần thiết cho danh sách, dùng lean(), đọc từ Secondary
             const products = await Product.find()
                 .select('name price quantity images category createdAt')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
+                .read('secondaryPreferred')
                 .lean();
 
             // Lưu vào Redis
@@ -90,7 +91,7 @@ class ProductController {
                 });
             }
 
-            const product = await Product.findById(id).lean();
+            const product = await Product.findById(id).read('secondaryPreferred').lean();
             if (!product) {
                 return res.status(404).json({ success: false, message: 'Product not found' });
             }
@@ -139,6 +140,7 @@ class ProductController {
                 .sort({ score: { $meta: 'textScore' } })
                 .skip(skip)
                 .limit(limit)
+                .read('secondaryPreferred')
                 .lean();
 
             await redisClient.set(cacheKey, JSON.stringify(products), 'EX', CACHE_TTL);
