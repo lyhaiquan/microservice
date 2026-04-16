@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  # MongoDB Replica Set Nodes
+  # MongoDB Node 1 (Primary potential)
   mongo1:
     image: mongo:6.0
     container_name: mongo1
@@ -9,12 +9,23 @@ services:
     command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27011"]
     ports:
       - "27011:27011"
+    volumes:
+      - mongo1_data:/data/db # QUAN TRỌNG: Lưu dữ liệu bền vững
     healthcheck:
-      test: ["CMD", "mongosh", "--port", "27011", "--eval", "db.adminCommand('ping')"]
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--port",
+          "27011",
+          "--eval",
+          "db.adminCommand('ping')",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  # MongoDB Node 2
   mongo2:
     image: mongo:6.0
     container_name: mongo2
@@ -22,12 +33,23 @@ services:
     command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27012"]
     ports:
       - "27012:27012"
+    volumes:
+      - mongo2_data:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--port", "27012", "--eval", "db.adminCommand('ping')"]
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--port",
+          "27012",
+          "--eval",
+          "db.adminCommand('ping')",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  # MongoDB Node 3
   mongo3:
     image: mongo:6.0
     container_name: mongo3
@@ -35,13 +57,23 @@ services:
     command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27013"]
     ports:
       - "27013:27013"
+    volumes:
+      - mongo3_data:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--port", "27013", "--eval", "db.adminCommand('ping')"]
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--port",
+          "27013",
+          "--eval",
+          "db.adminCommand('ping')",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # Khởi tạo Replica Set 1 lần duy nhất
+  # Tự động khởi tạo Replica Set
   mongo-init:
     image: mongo:6.0
     container_name: mongo-init
@@ -57,36 +89,40 @@ services:
       mongosh --host mongo1:27011 --eval 
       "
       try { 
-        rs.status(); 
-        print('RS already initialized.'); 
+        if (rs.status().ok) {
+          print('Replica Set đã được cấu hình trước đó.');
+        }
       } catch(e) { 
+        print('Bắt đầu khởi tạo Replica Set dbrs...');
         rs.initiate({ 
           _id: 'dbrs', 
           members: [
-            { _id: 0, host: 'mongo1:27011' },
-            { _id: 1, host: 'mongo2:27012' },
-            { _id: 2, host: 'mongo3:27013' }
+            { _id: 0, host: 'mongo1:27011', priority: 2 },
+            { _id: 1, host: 'mongo2:27012', priority: 1 },
+            { _id: 2, host: 'mongo3:27013', priority: 1 }
           ] 
         }); 
-        print('RS initiated successfully.'); 
+        print('Khởi tạo thành công!');
       }
       "
 
-  # Redis
+  # Redis - Dùng cho Distributed Locking & Caching
   redis:
     image: redis:7.0-alpine
     container_name: shopee-redis
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
 
-  # Zookeeper
+  # Zookeeper - Quản lý Kafka
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.4
     container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
 
-  # Kafka
+  # Kafka - Message Queue cho các task ngầm (Email, Bill...)
   kafka:
     image: confluentinc/cp-kafka:7.4.4
     container_name: kafka
@@ -97,11 +133,12 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+      # Sửa lỗi kết nối nội bộ và bên ngoài
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,EXTERNAL://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  # API Gateway (Nginx Reverse Proxy)
+  # API Gateway
   api-gateway:
     image: nginx:alpine
     container_name: api-gateway
@@ -111,7 +148,16 @@ services:
       - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - mongo-init
 
 networks:
   default:
     name: shopee-network
+
+# Khai báo Volume để không bị mất dữ liệu
+volumes:
+  mongo1_data:
+  mongo2_data:
+  mongo3_data:
+  redis_data:
