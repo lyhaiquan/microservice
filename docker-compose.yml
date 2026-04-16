@@ -6,11 +6,11 @@ services:
     image: mongo:6.0
     container_name: mongo1
     hostname: mongo1
-    command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27017"]
+    command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27011"]
     ports:
-      - "27011:27017"
+      - "27011:27011"
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--port", "27011", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -19,11 +19,11 @@ services:
     image: mongo:6.0
     container_name: mongo2
     hostname: mongo2
-    command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27017"]
+    command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27012"]
     ports:
-      - "27012:27017"
+      - "27012:27012"
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--port", "27012", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,11 +32,11 @@ services:
     image: mongo:6.0
     container_name: mongo3
     hostname: mongo3
-    command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27017"]
+    command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27013"]
     ports:
-      - "27013:27017"
+      - "27013:27013"
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--port", "27013", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -54,7 +54,7 @@ services:
         condition: service_healthy
     restart: "no"
     entrypoint: >
-      mongosh --host mongo1:27017 --eval 
+      mongosh --host mongo1:27011 --eval 
       "
       try { 
         rs.status(); 
@@ -63,9 +63,9 @@ services:
         rs.initiate({ 
           _id: 'dbrs', 
           members: [
-            { _id: 0, host: 'mongo1:27017' },
-            { _id: 1, host: 'mongo2:27017' },
-            { _id: 2, host: 'mongo3:27017' }
+            { _id: 0, host: 'mongo1:27011' },
+            { _id: 1, host: 'mongo2:27012' },
+            { _id: 2, host: 'mongo3:27013' }
           ] 
         }); 
         print('RS initiated successfully.'); 

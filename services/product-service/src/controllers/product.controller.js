@@ -5,22 +5,27 @@ const redisClient = require('../config/redis');
 const CACHE_TTL = 3600;
 
 class ProductController {
-    
+
     // Helper function xóa cache search và list
     static async invalidateProductCache(productId = null) {
         try {
-            // Xóa cache danh sách chung
-            const keysToDelete = ['products:all'];
+            const keysToDelete = [];
             if (productId) {
                 keysToDelete.push(`products:detail:${productId}`);
             }
-            
-            // Tìm tất cả các key search để xóa
+
+            // Xóa tất cả cache list theo pattern (products:list:*)
+            const listKeys = await redisClient.keys('products:list:*');
+            if (listKeys.length > 0) {
+                keysToDelete.push(...listKeys);
+            }
+
+            // Xóa tất cả cache search theo pattern
             const searchKeys = await redisClient.keys('products:search:*');
             if (searchKeys.length > 0) {
                 keysToDelete.push(...searchKeys);
             }
-            
+
             if (keysToDelete.length > 0) {
                 await redisClient.del(keysToDelete);
             }
@@ -29,30 +34,41 @@ class ProductController {
         }
     }
 
-    // Láy danh sách sản phẩm (có Cache)
+    // Lấy danh sách sản phẩm (có Pagination + Cache + lean + select)
     static async getAllProducts(req, res) {
         try {
-            const cacheKey = 'products:all';
+            const page = Math.max(1, parseInt(req.query.page) || 1);
+            const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
+            const skip = (page - 1) * limit;
+
+            // Cache key phản ánh đúng trang & số lượng
+            const cacheKey = `products:list:page:${page}:limit:${limit}`;
             const cachedData = await redisClient.get(cacheKey);
 
             // Cache Hit
             if (cachedData) {
                 return res.status(200).json({
                     success: true,
-                    meta: { source: 'redis' },
+                    meta: { source: 'redis', page, limit },
                     data: JSON.parse(cachedData)
                 });
             }
 
-            // Cache Miss
-            const products = await Product.find().sort({ createdAt: -1 });
-            
+            // Cache Miss — chỉ lấy field cần thiết cho danh sách, dùng lean(), đọc từ Secondary
+            const products = await Product.find()
+                .select('name price quantity images category createdAt')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .read('secondaryPreferred')
+                .lean();
+
             // Lưu vào Redis
             await redisClient.set(cacheKey, JSON.stringify(products), 'EX', CACHE_TTL);
 
             return res.status(200).json({
                 success: true,
-                meta: { source: 'mongodb' },
+                meta: { source: 'mongodb', page, limit },
                 data: products
             });
         } catch (error) {
@@ -75,7 +91,7 @@ class ProductController {
                 });
             }
 
-            const product = await Product.findById(id);
+            const product = await Product.findById(id).read('secondaryPreferred').lean();
             if (!product) {
                 return res.status(404).json({ success: false, message: 'Product not found' });
             }
@@ -112,10 +128,20 @@ class ProductController {
             }
 
             // Sử dụng $text index để tìm kiếm hiệu quả hơn regex
+            const page = Math.max(1, parseInt(req.query.page) || 1);
+            const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
+            const skip = (page - 1) * limit;
+
             const products = await Product.find(
                 { $text: { $search: q } },
                 { score: { $meta: 'textScore' } }
-            ).sort({ score: { $meta: 'textScore' } });
+            )
+                .select('name price quantity images category createdAt')
+                .sort({ score: { $meta: 'textScore' } })
+                .skip(skip)
+                .limit(limit)
+                .read('secondaryPreferred')
+                .lean();
 
             await redisClient.set(cacheKey, JSON.stringify(products), 'EX', CACHE_TTL);
 
@@ -142,9 +168,9 @@ class ProductController {
             );
 
             if (!updatedProduct) {
-                return res.status(400).json({ 
-                    success: false, 
-                    message: 'Sản phẩm không tồn tại hoặc không đủ hàng (Out of stock)' 
+                return res.status(400).json({
+                    success: false,
+                    message: 'Sản phẩm không tồn tại hoặc không đủ hàng (Out of stock)'
                 });
             }
 
@@ -165,7 +191,7 @@ class ProductController {
     static async createProduct(req, res) {
         try {
             const newProduct = await Product.create(req.body);
-            
+
             // Xóa cache danh sách chung do có thêm 1 item
             await ProductController.invalidateProductCache();
 
@@ -183,7 +209,7 @@ class ProductController {
         try {
             const { id } = req.params;
             const updatedProduct = await Product.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
-            
+
             if (!updatedProduct) {
                 return res.status(404).json({ success: false, message: 'Product not found' });
             }
@@ -205,7 +231,7 @@ class ProductController {
         try {
             const { id } = req.params;
             const deletedProduct = await Product.findByIdAndDelete(id);
-            
+
             if (!deletedProduct) {
                 return res.status(404).json({ success: false, message: 'Product not found' });
             }

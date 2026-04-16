@@ -1,0 +1,149 @@
+# Báo cáo Kiến trúc Hệ thống Microservices Shopee
+
+Tài liệu này mô tả chi tiết luồng hoạt động của hệ thống dực trên các bài test đã thực hiện. Hệ thống được sinh ra để chịu tải cao, đảm bảo tính toàn vẹn dữ liệu (Chống Overselling) và khả năng sinh tồn khi gặp thảm hoạ (Failover).
+
+---
+
+## 1. Sơ đồ Kiến trúc Tổng quan (System Architecture)
+
+Hệ thống tuân thủ nghiêm ngặt mô hình Microservices, giao tiếp ngoại vi qua API Gateway, giao tiếp nội bộ qua Kafka và Redis. Điểm nhấn lớn nhất là Cụm MongoDB Replica Set 3 Nút.
+
+```mermaid
+graph TD
+    Client[Client / K6 Load Tester] -->|HTTP Request| Gateway(Nginx API Gateway<br/>8080)
+
+    Gateway -->|/api/auth| Auth[Auth Service<br/>5050]
+    Gateway -->|/api/products| Product[Product Service<br/>5001]
+    Gateway -->|/api/orders| Order[Order Service<br/>5003]
+    Gateway -->|/api/cart| Cart[Cart Service<br/>5002]
+    Gateway -->|/api/payments| Payment[Payment Service<br/>5004]
+
+    Product -.->|Tăng tốc Đọc/Ghi| Redis[(Redis Cache<br/>6379)]
+    
+    Order -.->|Publish ORDER_CREATED| Kafka[Kafka Message Broker<br/>9092]
+    Kafka -.->|Consume EVENT| Product
+    Product -.->|Publish STOCK_FAILED / RESERVED| Kafka
+    Kafka -.->|Consume Đền bù| Order
+    
+    Product -->|Read/Write| Mongo[(MongoDB dbrs Cluster)]
+    Order -->|Read/Write| Mongo
+    Auth -->|Read/Write| Mongo
+    
+    subgraph "MongoDB Replica Set (dbrs)"
+        Mongo1[mongo1:27011<br>Tướng Phụ - SECONDARY]
+        Mongo2[mongo2:27012<br>Tướng Chính - PRIMARY]
+        Mongo3[mongo3:27013<br>Tướng Phụ - SECONDARY]
+        Mongo2 -.->|Đồng bộ Dữ liệu 1 chiều| Mongo1
+        Mongo2 -.->|Đồng bộ Dữ liệu 1 chiều| Mongo3
+    end
+```
+
+---
+
+## 2. Luồng xử lý Chịu tải Cao (Áp dụng cho bài test Performance 5000 req/s)
+
+**Bài toán:** Làm sao để Product Service sống sót khi 5000 người dùng liên tục quét danh sách sản phẩm cùng lúc?
+**Cơ chế:** Kết hợp Bộ nhớ đệm **Redis** + Cơ chế phân luồng đọc **CQRS (secondaryPreferred)** của MongoDB. Cụ thể: Node Primary chỉ phục vụ ghi, tất cả yêu cầu lấy dữ liệu đều bị đẩy qua các Node Secondary.
+
+```mermaid
+sequenceDiagram
+    participant Tester as K6 Load Tester
+    participant Nginx as API Gateway
+    participant Prod as Product Service
+    participant Redis as Redis Cache
+    participant MongoSec as Mongo SECONDARY
+
+    Tester->>Nginx: GET /api/products
+    Nginx->>Prod: Forward Request
+    Prod->>Redis: Kiểm tra Cache (Key: 'products')
+    
+    alt Cache HIT (Đã có dữ liệu)
+        Redis-->>Prod: Sinh dữ liệu siêu tốc (<20ms)
+    else Cache MISS (Lần truy cập đầu)
+        Redis-->>Prod: Rỗng (Null)
+        Note over MongoSec: Luồng Read Scaling
+        Prod->>MongoSec: Tìm Data (secondaryPreferred)
+        MongoSec-->>Prod: Dữ liệu thực tế 
+        Prod->>Redis: Lưu vào Cache 5 phút (TTL)
+    end
+    
+    Prod-->>Nginx: Response 200 OK
+    Nginx-->>Tester: Trả JSON Kết quả
+```
+
+---
+
+## 3. Luồng xử lý Bán hàng Chống Xung đột (SAGA Choreography)
+
+**Bài toán:** Bài test Race Condition mô phỏng 10 máy gõ cửa mua 1 chiếc iPhone cuối cùng trong kho.
+**Cơ chế:** Eventual Consistency thông qua Kafka + Row-Level Locking của MongoDB WiredTiger. Order Service luôn trả về Thành công lập tức, phần "Sự thật" do Product Service + Hành động đền bù định đoạt.
+
+```mermaid
+sequenceDiagram
+    participant VU as 10 Người mua (Concurrent)
+    participant OrderSvc as Order Service
+    participant Kafka as Kafka
+    participant ProdSvc as Product Service
+    participant Mongo as Mongo (PRIMARY)
+
+    %% Phát lệnh
+    VU->>OrderSvc: Bấm nút Mua liên tục (Số lượng tồn=1)
+    Note right of OrderSvc: Tư duy Bất Đồng Bộ:<br/>Chấp nhận mọi thứ trước mắt
+    OrderSvc->>Mongo: Insert 10 Orders trạng thái PENDING
+    OrderSvc-->>VU: HTTP 201 Created (Toàn bộ 10 user tưởng thành công)
+    OrderSvc->>Kafka: Publish 10 x Sự kiện [ORDER_CREATED]
+
+    %% Xử lý tại Kho (Atomic Update)
+    Kafka-->>ProdSvc: Lấy ra Sự kiện Mua đầu tiên (Offset 0)
+    Note right of ProdSvc: Row-level DB Lock
+    ProdSvc->>Mongo: Cập nhật: $inc -1 NẾU tồn kho >= 1
+    Mongo-->>ProdSvc: Thành Công! (Tồn kho rớt xuống 0)
+    ProdSvc->>Kafka: Publish [STOCK_RESERVED] báo giữ hàng OK
+
+    %% Xử lý 9 người chậm chân
+    loop Lần lượt Cày 9 Sự kiện còn lại
+        Kafka-->>ProdSvc: Đọc Sự Kiện Mua (Thứ 2 đến thứ 10)
+        ProdSvc->>Mongo: Cập nhật: $inc -1 NẾU tồn kho >= 1
+        Mongo-->>ProdSvc: BẠN ĐÃ TỚI TRỄ! Đáy kho bằng 0 rồi! (Trả về null)
+        ProdSvc->>Kafka: Publish [STOCK_FAILED] báo Rớt Đơn!
+    end
+
+    %% Bù trừ (Compensate/Rollback)
+    Note left of OrderSvc: Quá trình Đền bù lỗi
+    Kafka-->>OrderSvc: Order Service nhận được 9 trát [STOCK_FAILED]
+    OrderSvc->>Mongo: Đổi gắt trạng thái 9 Order kia thành CANCELLED
+```
+
+---
+
+## 4. Luồng xử lý Phục hồi Thảm Hoạ (High Availability / Failover Test)
+
+**Bài toán:** Giả lập sự cố Node Database chứa toàn quyền quyết định (PRIMARY) bị cháy ngầm.
+**Cơ chế:** Tính năng Auto-Failover của MongoDB Replica Set bắt tay nhịp nhàng cùng bộ Driver Connection nội tại của NodeJS, tự sửa rạn nứt mà không làm thất thoát một Data nào.
+
+```mermaid
+sequenceDiagram
+    participant App as Mongoose (NodeJS App)
+    participant M2 as mongo2 (Node PRIMARY)
+    participant M1 as mongo1 (Node SECONDARY)
+    participant M3 as mongo3 (Node SECONDARY)
+
+    App->>M2: Insert Document Bình thường
+    M2-->>App: OK
+    
+    Note over M2: 🔥 SỰ CỐ: Docker giết mongo2 (CRASH)!
+    
+    App->>x M2: Lệnh Write mới gửi sang bị đứt mạng
+    Note left of App: Mongoose phát hiện Sếp(Primary) ngủm!<br/>Driver tạm giữ (Buffer) mớ Lệnh ở RAM
+    
+    Note over M1, M3: Họp Bầu Cử Liên Minh (2-3 giây)
+    M1->>M3: Ê tao mất tín hiệu với M2 rồi, Bầu cử thôi!
+    M3->>M1: Tao tự ứng cử. Phiếu mầy đâu?
+    M1->>M3: Tao Vote mày!
+    Note over M3: mongo3 THĂNG CẤP LÀM TÂN PRIMARY
+    
+    App->>M3: Mongoose dò la và nhận ra Sếp mới là M3
+    Note left of App: Tiến Hành Xả Kho tàng trữ (Flush)
+    App->>M3: Bắn toàn bộ file Lệnh đang treo lúc nãy vào M3
+    M3-->>App: Ghi Hoàn tất (User hoàn toàn không bị văng lỗi)
+```
