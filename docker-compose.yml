@@ -158,7 +158,9 @@ services:
   # ==========================================
 
   product-service:
-    build: ./services/product-service
+    build:
+      context: .
+      dockerfile: services/product-service/Dockerfile
     container_name: product-service
     restart: always
     ports:
@@ -174,7 +176,9 @@ services:
       - kafka
 
   cart-service:
-    build: ./services/cart-service
+    build:
+      context: .
+      dockerfile: services/cart-service/Dockerfile
     container_name: cart-service
     restart: always
     ports:
@@ -192,7 +196,9 @@ services:
       - product-service
 
   order-service:
-    build: ./services/order-service
+    build:
+      context: .
+      dockerfile: services/order-service/Dockerfile
     container_name: order-service
     restart: always
     ports:
@@ -209,7 +215,9 @@ services:
       - kafka
 
   payment-service:
-    build: ./services/payment-service
+    build:
+      context: .
+      dockerfile: services/payment-service/Dockerfile
     container_name: payment-service
     restart: always
     ports:
@@ -229,7 +237,9 @@ services:
       - mongo-init
 
   auth-service:
-    build: ./services/auth-service
+    build:
+      context: .
+      dockerfile: services/auth-service/Dockerfile
     container_name: auth-service
     restart: always
     ports:
