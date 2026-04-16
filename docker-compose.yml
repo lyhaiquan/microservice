@@ -158,7 +158,7 @@ services:
   # ==========================================
 
   product-service:
-    build: ./services/product
+    build: ./services/product-service
     container_name: product-service
     restart: always
     ports:
@@ -174,7 +174,7 @@ services:
       - kafka
 
   cart-service:
-    build: ./services/cart
+    build: ./services/cart-service
     container_name: cart-service
     restart: always
     ports:
@@ -192,7 +192,7 @@ services:
       - product-service
 
   order-service:
-    build: ./services/order
+    build: ./services/order-service
     container_name: order-service
     restart: always
     ports:
@@ -209,7 +209,7 @@ services:
       - kafka
 
   payment-service:
-    build: ./services/payment
+    build: ./services/payment-service
     container_name: payment-service
     restart: always
     ports:
@@ -229,7 +229,7 @@ services:
       - mongo-init
 
   auth-service:
-    build: ./services/auth # Hoặc đường dẫn tương ứng của bạn
+    build: ./services/auth-service
     container_name: auth-service
     restart: always
     ports:
