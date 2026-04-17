@@ -21,7 +21,7 @@
 
 const { MongoClient, ObjectId } = require('mongodb');
 
-const API_GATEWAY = 'http://127.0.0.1:8080/api/';
+const API_GATEWAY = 'http://127.0.0.1:8080/api';
 const MONGO_URI = 'mongodb://127.0.0.1:27011,127.0.0.1:27012,127.0.0.1:27013/shopee?replicaSet=dbrs';
 const CONCURRENT_REQUESTS = 10;
 const PRODUCT_STOCK = 1;
@@ -145,7 +145,7 @@ async function fireConcurrentOrders(productId) {
     const startTime = Date.now();
 
     const promises = Array.from({ length: CONCURRENT_REQUESTS }, (_, i) =>
-        fetch(`${API_GATEWAY}/orders`, {
+        fetch(`${API_GATEWAY}/orders/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderPayload),
