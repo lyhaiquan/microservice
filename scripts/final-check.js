@@ -139,7 +139,6 @@ async function runTest() {
                 const VNP_URL = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
                 const createDate = moment(new Date()).format('YYYYMMDDHHmmss');
                 const vnp_TxnRef = `${orderId}_${moment(new Date()).format('HHmmss')}`; 
-                
                 let vnp_Params = {
                     vnp_Version: '2.1.0',
                     vnp_Command: 'pay',

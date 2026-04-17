@@ -22,7 +22,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
 
 const API_GATEWAY = 'http://127.0.0.1:8080/api';
-const MONGO_URI = 'mongodb://host.docker.internal:27011,host.docker.internal:27012,host.docker.internal:27013/shopee?replicaSet=dbrs';
+const MONGO_URI = 'mongodb://mongo1:27011,mongo2:27012,mongo3:27013/shopee?replicaSet=dbrs&readPreference=secondaryPreferred';
 const CONCURRENT_REQUESTS = 10;
 const PRODUCT_STOCK = 1;
 
@@ -78,7 +78,7 @@ async function setupDatabase() {
 
         // --- Tìm hoặc tạo sản phẩm test ---
         let product = await productsCol.findOne({});
-        
+
         if (!product) {
             const result = await productsCol.insertOne({
                 name: 'iPhone 16 Pro Max (Race Test)',
@@ -114,7 +114,7 @@ async function setupDatabase() {
 
     } catch (error) {
         console.error(`\n${colors.red}  ❌ Lỗi setup database: ${error.message}${colors.reset}`);
-        await client.close().catch(() => {});
+        await client.close().catch(() => { });
         process.exit(1);
     }
 }
@@ -190,7 +190,7 @@ async function fireConcurrentOrders(productId) {
 
         const orderId = r.orderId ? ` → Order: ${r.orderId}` : '';
         const msg = r.status !== 201 ? ` → ${r.message}` : '';
-        
+
         console.log(`    ${icon} Request #${String(r.index).padStart(2, '0')}  │  ${statusText}  │  ${r.duration}ms${orderId}${msg}`);
     }
 
@@ -226,7 +226,7 @@ async function verifyDatabase(productId) {
         return { finalStock, pendingCount, cancelledCount, totalCount };
     } catch (error) {
         console.error(`\n${colors.red}  ❌ Lỗi verify database: ${error.message}${colors.reset}`);
-        await client.close().catch(() => {});
+        await client.close().catch(() => { });
         return { finalStock: -1, pendingCount: -1, cancelledCount: -1, totalCount: -1 };
     }
 }
