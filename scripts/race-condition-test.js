@@ -22,7 +22,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
 
 const API_GATEWAY = 'http://127.0.0.1:8080/api';
-const MONGO_URI = 'mongodb://mongo1:27011,mongo2:27012,mongo3:27013/shopee?replicaSet=dbrs&readPreference=secondaryPreferred';
+const MONGO_URI = 'mongodb://127.0.0.1:27011,127.0.0.1:27012,127.0.0.1:27013/shopee?replicaSet=dbrs';
 const CONCURRENT_REQUESTS = 10;
 const PRODUCT_STOCK = 1;
 
