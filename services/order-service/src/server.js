@@ -55,7 +55,7 @@ const startServer = async () => {
 
         await connectKafka();
         
-        OrderConsumer.start().catch(err => {
+        OrderConsumer.listenPaymentConfirmed().catch(err => {
             console.error('Error starting Order consumers:', err);
         });
         

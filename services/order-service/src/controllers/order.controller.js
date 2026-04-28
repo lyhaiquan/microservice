@@ -31,6 +31,10 @@ class OrderController {
             const order = await OrderService.createOrder(userId, items, parsedAmount, idempotencyKey);
             return res.status(201).json({ success: true, data: order });
         } catch (error) {
+            // Xử lý lỗi hết hàng từ Product Service
+            if (error.status === 400) {
+                return res.status(400).json({ success: false, message: error.message });
+            }
             // Xử lý lỗi trùng lặp (nếu có Race Condition lọt qua bước check trên)
             if (error.code === 11000) {
                 const existingOrder = await OrderService.getOrderByKey(req.body.idempotencyKey || req.headers['x-idempotency-key']);

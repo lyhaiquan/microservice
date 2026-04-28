@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles",
+    "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
   "keywords": [],
@@ -15,12 +16,11 @@
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "ioredis": "^5.10.1",
+    "ioredis": "^5.4.1",
     "kafkajs": "^2.2.4",
     "mongoose": "^9.3.3"
   },
   "devDependencies": {
-    "ioredis-mock": "^8.13.1",
     "jest": "^30.3.0",
     "mongodb-memory-server": "^11.0.1",
     "nodemon": "^3.1.14",

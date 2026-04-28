@@ -6,7 +6,9 @@
         "test": "jest --runInBand --detectOpenHandles"
     },
     "dependencies": {
-        "jsonwebtoken": "^9.0.3"
+        "ioredis": "^5.10.1",
+        "jsonwebtoken": "^9.0.3",
+        "rate-limiter-flexible": "^11.0.1"
     },
     "peerDependencies": {
         "mongoose": ">=7.0.0"

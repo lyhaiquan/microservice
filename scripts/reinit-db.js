@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const MONGO_URI = 'mongodb://127.0.0.1:27011/shopee?replicaSet=dbrs';
+const MONGO_URI = 'mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin';
 
 async function initDB() {
     try {

@@ -36,5 +36,4 @@ if (fs.existsSync(testPath)) {
     content = content.replace(/mongodb:\/\/127\.0\.0\.1:2701[0-9]/g, `mongodb://127.0.0.1:${primaryPort}`);
     fs.writeFileSync(testPath, content);
 }
-
 console.log("Updated environments with primary port.");

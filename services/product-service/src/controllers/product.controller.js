@@ -134,10 +134,10 @@ class ProductController {
         try {
             const { productId, quantity } = req.body;
 
-            // Toán tử nguyên tử: Chỉ trừ kho nếu quantity hiện tại >= quantity cần trừ
+            // Toán tử nguyên tử: Chỉ trừ kho nếu availableStock hiện tại >= quantity cần trừ
             const updatedProduct = await Product.findOneAndUpdate(
-                { _id: productId, quantity: { $gte: quantity } },
-                { $inc: { quantity: -quantity } },
+                { _id: productId, 'variants.0.availableStock': { $gte: quantity } },
+                { $inc: { 'variants.0.availableStock': -quantity } },
                 { new: true }
             );
 
@@ -154,12 +154,13 @@ class ProductController {
             return res.status(200).json({
                 success: true,
                 message: 'Hạ tồn kho thành công',
-                data: { productId, remainingQuantity: updatedProduct.quantity }
+                data: { productId, remainingStock: updatedProduct.variants[0].availableStock }
             });
         } catch (error) {
             return res.status(500).json({ success: false, message: error.message });
         }
     }
+
 
     // Tạo sản phẩm mới (Write) -> Clear Cache All
     static async createProduct(req, res) {

@@ -4,6 +4,7 @@ const productRoutes = require('./routes/product.routes');
 
 const app = express();
 
+app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
 

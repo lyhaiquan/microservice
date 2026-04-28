@@ -1,30 +1,58 @@
 const mongoose = require('mongoose');
 
 const orderItemSchema = new mongoose.Schema({
-    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+    skuId: { type: String, required: true },
+    productNameSnapshot: { type: String, required: true },
+    unitPrice: { type: Number, required: true },
     quantity: { type: Number, required: true, min: 1 },
-    price: { type: Number, required: true }, // Giá chốt (Snapshot)
-    name: { type: String, required: true }   // Tên chốt (Snapshot)
+    lineTotal: { type: Number, required: true }
 }, { _id: false });
 
 const orderSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-    items: [orderItemSchema],
-    totalAmount: { type: Number, required: true },
-    paymentMethod: { type: String, enum: ['COD', 'VNPAY'], default: 'COD' },
+    _id: { type: String, required: true }, // Custom ID: ORD_100001
+    region: { type: String, enum: ['NORTH', 'CENTRAL', 'SOUTH'], required: true }, // Shard Key
+    userId: { type: String, required: true }, // Dùng String id USR_100001
+    userRegion: { type: String, enum: ['NORTH', 'CENTRAL', 'SOUTH'], required: true },
+    deliveryRegion: { type: String, enum: ['NORTH', 'CENTRAL', 'SOUTH'], required: true },
+    isCrossRegion: { type: Boolean, required: true },
     status: {
         type: String,
-        enum: ['PENDING', 'PAID', 'SHIPPING', 'COMPLETED', 'CANCELLED'],
-        default: 'PENDING',
-        index: true
+        enum: ['PENDING_PAYMENT', 'PAID', 'SHIPPING', 'COMPLETED', 'CANCELLED'],
+        default: 'PENDING_PAYMENT'
     },
-    idempotencyKey: {
-        type: String,
-        unique: true,
-        index: true,
-        sparse: true // Allow existing orders without this key
-    }
-}, { timestamps: true });
+    pricing: {
+        itemsSubtotal: { type: Number, required: true },
+        shippingFee: { type: Number, required: true },
+        grandTotal: { type: Number, required: true }
+    },
+    shippingAddressSnapshot: {
+        receiverName: { type: String },
+        phoneEncrypted: {
+            iv: { type: String },
+            ciphertext: { type: String }
+        },
+        fullAddress: { type: String }
+    },
+    items: [orderItemSchema],
+    paymentId: { type: String, default: null },
+    reservationId: { type: String },
+    statusHistory: [{
+        status: String,
+        timestamp: { type: Date, default: Date.now }
+    }],
+    idempotencyKey: { type: String },
+    version: { type: Number, default: 1 }
+}, {
+    timestamps: true,
+    _id: false
+});
 
+// Indexes
+orderSchema.index({ userId: 1, createdAt: -1 });
+orderSchema.index({ paymentId: 1 });
+orderSchema.index({ reservationId: 1 });
+orderSchema.index({ region: 1, status: 1, createdAt: -1 });
+orderSchema.index({ idempotencyKey: 1 }, { unique: true, sparse: true });
 
-module.exports = mongoose.model('Order', orderSchema);
+const Order = mongoose.model('Order', orderSchema);
+module.exports = Order;

@@ -2,6 +2,7 @@ require('dotenv').config();
 const app = require('./app');
 const mongoose = require('mongoose');
 const connectDB = require('../../common/src/database');
+const SessionCleanerService = require('./services/sessionCleaner.service');
 
 const PORT = process.env.PORT || 5050;
 const MONGO_URI = process.env.MONGO_URI;
@@ -53,6 +54,8 @@ const startServer = async () => {
         }
 
         await connectDB(MONGO_URI, mongoose);
+        
+        SessionCleanerService.startCronJob();
 
         server = app.listen(PORT, () => {
             console.log(`🚀 Auth Service is running on port ${PORT}`);

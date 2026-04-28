@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const TEST_URI = 'mongodb://127.0.0.1:27011,127.0.0.1:27012,127.0.0.1:27013/shopee?replicaSet=dbrs';
+const TEST_URI = 'mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin';
 
 async function test() {
     try {

@@ -1,37 +1,37 @@
-const { Kafka, Partitioners } = require('kafkajs');
+const { Kafka, logLevel } = require('kafkajs');
+
+const KAFKA_BROKERS = (process.env.KAFKA_BOOTSTRAP_SERVERS || 'localhost:9092').split(',');
+const CLIENT_ID = 'payment-service';
+const GROUP_ID = 'payment-group';
 
 const kafka = new Kafka({
-    clientId: 'payment-service',
-    brokers: [(process.env.KAFKA_BOOTSTRAP_SERVERS || '127.0.0.1:9092')],
+    clientId: CLIENT_ID,
+    brokers: KAFKA_BROKERS,
+    logLevel: logLevel.INFO,
     retry: {
-         initialRetryTime: 300,
-         retries: 5
+        initialRetryTime: 300,
+        retries: 8
     }
 });
 
-const producer = kafka.producer({
-    createPartitioner: Partitioners.DefaultPartitioner
-});
+const producer = kafka.producer();
+const consumer = kafka.consumer({ groupId: GROUP_ID });
 
-const consumer = kafka.consumer({ groupId: 'payment-group' });
-
-const connectKafka = async () => {
+async function connectKafka() {
     let retries = 5;
     while (retries > 0) {
         try {
             await producer.connect();
             await consumer.connect();
             console.log('✅ Kafka Producer & Consumer connected successfully');
-            return; // Thành công → thoát
-        } catch (error) {
-            console.error(`❌ Failed to connect to Kafka. Retries left: ${retries - 1}. Error: ${error.message}`);
-            retries -= 1;
-            if (retries === 0) {
-                throw new Error(`Cannot connect to Kafka after 5 attempts: ${error.message}`);
-            }
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            return;
+        } catch (err) {
+            retries--;
+            console.error(`❌ Kafka connection failed. Retries left: ${retries}. Error: ${err.message}`);
+            if (retries === 0) throw new Error(`Cannot connect to Kafka after 5 attempts: ${err.message}`);
+            await new Promise(r => setTimeout(r, 2000));
         }
     }
-};
+}
 
-module.exports = { kafka, producer, consumer, connectKafka };
+module.exports = { producer, consumer, connectKafka };

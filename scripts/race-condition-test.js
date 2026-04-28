@@ -22,7 +22,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
 
 const API_GATEWAY = 'http://127.0.0.1:8080/api';
-const MONGO_URI = 'mongodb://host.docker.internal:27011,host.docker.internal:27012,host.docker.internal:27013/shopee?replicaSet=dbrs';
+const MONGO_URI = 'mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin';
 const CONCURRENT_REQUESTS = 10;
 const PRODUCT_STOCK = 1;
 
@@ -72,7 +72,7 @@ async function setupDatabase() {
         await client.connect();
         log('✅', 'Kết nối MongoDB thành công');
 
-        const db = client.db('shopee');
+        const db = client.db('ecommerce_db');
         const productsCol = db.collection('products');
         const ordersCol = db.collection('orders');
 
@@ -81,12 +81,20 @@ async function setupDatabase() {
         
         if (!product) {
             const result = await productsCol.insertOne({
+                sellerId: 'SELLER_001',
+                sellerRegion: 'SOUTH',
                 name: 'iPhone 16 Pro Max (Race Test)',
-                description: 'Sản phẩm dùng để test Race Condition',
-                price: 34990000,
-                quantity: PRODUCT_STOCK,
-                category: 'Phone',
-                images: [],
+                slug: 'iphone-16-pro-max-race-test',
+                categoryId: 'CAT_PHONE',
+                variants: [{
+                    skuId: 'SKU_IPHONE16',
+                    price: 2000000,
+                    totalStock: PRODUCT_STOCK,
+                    availableStock: PRODUCT_STOCK,
+                    reservedStock: 0,
+                    version: 1,
+                }],
+                status: 'ACTIVE',
                 createdAt: new Date(),
                 updatedAt: new Date(),
             });
@@ -95,9 +103,9 @@ async function setupDatabase() {
         } else {
             await productsCol.updateOne(
                 { _id: product._id },
-                { $set: { quantity: PRODUCT_STOCK, updatedAt: new Date() } }
+                { $set: { 'variants.0.availableStock': PRODUCT_STOCK, updatedAt: new Date() } }
             );
-            log('🔄', `Reset tồn kho "${product.name}" → quantity = ${PRODUCT_STOCK}`);
+            log('🔄', `Reset tồn kho "${product.name}" → availableStock = ${PRODUCT_STOCK}`);
         }
 
         // --- Xóa tất cả orders cũ ---
@@ -105,8 +113,10 @@ async function setupDatabase() {
         log('🗑️', `Xóa ${deleteResult.deletedCount} orders cũ`);
 
         const productId = product._id.toString();
+        const productPrice = product.variants && product.variants[0] ? product.variants[0].price : (product.price || 0);
+        
         log('📦', `Product ID: ${productId}`);
-        log('💰', `Giá: ${product.price.toLocaleString('vi-VN')} VNĐ`);
+        log('💰', `Giá: ${productPrice.toLocaleString('vi-VN')} VNĐ`);
         log('📊', `Tồn kho hiện tại: ${PRODUCT_STOCK}`);
 
         await client.close();
@@ -118,6 +128,7 @@ async function setupDatabase() {
         process.exit(1);
     }
 }
+
 
 // ============================================================
 //  Phase 2: Fire 10 Concurrent Order Requests
@@ -211,10 +222,10 @@ async function verifyDatabase(productId) {
 
     try {
         await client.connect();
-        const db = client.db('shopee');
+        const db = client.db('ecommerce_db');
 
         const product = await db.collection('products').findOne({ _id: new ObjectId(productId) });
-        const finalStock = product ? product.quantity : 'N/A';
+        const finalStock = product && product.variants && product.variants[0] ? product.variants[0].availableStock : 'N/A';
         const ordersCount = await db.collection('orders').countDocuments({});
 
         log('📦', `Tồn kho còn lại: ${finalStock}`);

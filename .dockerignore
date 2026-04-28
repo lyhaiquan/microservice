@@ -1,0 +1,13 @@
+node_modules
+*.log
+.git
+.env
+dist
+.vscode
+frontend/node_modules
+services/auth-service/node_modules
+services/product-service/node_modules
+services/cart-service/node_modules
+services/order-service/node_modules
+services/payment-service/node_modules
+services/common/node_modules

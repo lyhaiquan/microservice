@@ -1,10 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const ProductController = require('../controllers/product.controller');
+const { rateLimitMiddleware } = require('../../../common');
+
+// Strict Leaky Bucket: 5 req/sec (1 point every 0.2s) - Fail Fast
+const productListLimiter = rateLimitMiddleware.createRateLimiter({
+    keyPrefix: 'product_list',
+    points: 1,
+    duration: 0.2
+});
 
 // Read (GET / Cache Logic)
-router.get('/', ProductController.getAllProducts);
-router.get('/search', ProductController.searchProducts);
+router.get('/', productListLimiter, ProductController.getAllProducts);
+router.get('/search', productListLimiter, ProductController.searchProducts);
 router.get('/:id', ProductController.getProductById);
 
 // Write (POST / PUT / DELETE)

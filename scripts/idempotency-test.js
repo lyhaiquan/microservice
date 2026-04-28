@@ -22,7 +22,7 @@ const { MongoClient } = require('mongodb');
 const crypto = require('crypto');
 
 const API_GATEWAY = 'http://127.0.0.1:8080/api';
-const MONGO_URI = 'mongodb://host.docker.internal:27011,host.docker.internal:27012,host.docker.internal:27013/shopee?replicaSet=dbrs';
+const MONGO_URI = 'mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin';
 
 const colors = {
     reset: '\x1b[0m',
@@ -42,19 +42,27 @@ function header(title) {
 async function setupProduct() {
     const client = new MongoClient(MONGO_URI);
     await client.connect();
-    const db = client.db('shopee');
+    const db = client.db('ecommerce_db');
+    
+    // Find any product
+    const product = await db.collection('products').findOne({});
+    if (!product) {
+        console.error("❌ No product found in DB. Run seed first.");
+        process.exit(1);
+    }
+    
     await db.collection('products').updateOne(
-        { _id: new (require('mongodb').ObjectId)('69d60f78a03225d10b514f74') },
-        { $set: { quantity: 100 } }
+        { _id: product._id },
+        { $set: { 'variants.0.availableStock': 100 } }
     );
-    console.log('✅ Stock reset to 100');
+    console.log('✅ Stock reset to 100 for product:', product._id.toString());
     await client.close();
+    return product._id.toString();
 }
 
 async function runTest() {
-    await setupProduct();
+    const productId = await setupProduct();
     const idempotencyKey = `order-key-${crypto.randomUUID()}`;
-    const productId = '69d60f78a03225d10b514f74'; // Sử dụng ID từ lần test trước hoặc tìm sản phẩm bất kỳ
     
     header('🚀 IDEMPOTENCY TEST START');
     console.log(`🔑 Key: ${idempotencyKey}`);
@@ -65,7 +73,7 @@ async function runTest() {
             productId: productId,
             quantity: 1,
             price: 2000000,
-            name: 'Chanel Coco Noir'
+            name: 'Test Product'
         }],
         totalAmount: 2000000,
         idempotencyKey: idempotencyKey
@@ -82,7 +90,8 @@ async function runTest() {
     console.log(`   🔸 Result #1: Status ${res1.status} | OrderID: ${data1.data?._id || 'FAIL'}`);
 
     if (res1.status !== 201) {
-        console.error(`${colors.red}❌ Error: Request #1 should return 201 Created${colors.reset}`);
+        console.error(`${colors.red}❌ Error: Request #1 should return 201 Created (Got ${res1.status})${colors.reset}`);
+        console.error(`Response body:`, data1);
         process.exit(1);
     }
 
@@ -103,7 +112,7 @@ async function runTest() {
     header('🔍 VERIFYING DATABASE');
     const client = new MongoClient(MONGO_URI);
     await client.connect();
-    const db = client.db('shopee');
+    const db = client.db('ecommerce_db');
     const count = await db.collection('orders').countDocuments({ idempotencyKey });
     console.log(`📝 Records with this key in DB: ${count}`);
     await client.close();

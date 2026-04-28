@@ -1,41 +1,33 @@
 const mongoose = require('mongoose');
 
+const variantSchema = new mongoose.Schema({
+    skuId: { type: String, required: true },
+    price: { type: Number, required: true, min: 0 },
+    totalStock: { type: Number, required: true, min: 0, default: 0 },
+    availableStock: { type: Number, required: true, min: 0, default: 0 },
+    reservedStock: { type: Number, required: true, min: 0, default: 0 },
+    version: { type: Number, default: 1 }
+}, { _id: false });
+
 const productSchema = new mongoose.Schema({
-    name: {
+    sellerId: { type: String, required: true, index: true },
+    sellerRegion: { type: String, enum: ['NORTH', 'CENTRAL', 'SOUTH'], required: true },
+    name: { type: String, required: true, trim: true },
+    slug: { type: String, required: true, unique: true },
+    categoryId: { type: String, required: true },
+    variants: [variantSchema],
+    status: {
         type: String,
-        required: [true, 'Product name is required'],
-        trim: true
-    },
-    description: {
-        type: String,
-        trim: true
-    },
-    price: {
-        type: Number,
-        required: [true, 'Product price is required'],
-        min: [0, 'Price must be greater than or equal to 0']
-    },
-    quantity: {
-        type: Number,
-        required: [true, 'Stock quantity is required'],
-        default: 0,
-        min: [0, 'Quantity cannot be negative']
-    },
-    images: [{
-        type: String
-    }],
-    category: {
-        type: String,
-        index: true
+        enum: ['ACTIVE', 'INACTIVE', 'BANNED'],
+        default: 'ACTIVE'
     }
 }, {
-    timestamps: true,
-    optimisticConcurrency: true // Bật OCC để chống hạ tồn kho sai lệch
+    timestamps: true
 });
 
-// Text index để search tên sản phẩm hiệu quả
-productSchema.index({ name: 'text', description: 'text' });
-
+productSchema.index({ categoryId: 1, status: 1 });
+productSchema.index({ sellerRegion: 1, status: 1 });
+productSchema.index({ name: 'text' });
 
 const Product = mongoose.model('Product', productSchema);
 
