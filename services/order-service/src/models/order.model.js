@@ -17,7 +17,7 @@ const orderSchema = new mongoose.Schema({
     isCrossRegion: { type: Boolean, required: true },
     status: {
         type: String,
-        enum: ['PENDING_PAYMENT', 'PAID', 'SHIPPING', 'COMPLETED', 'CANCELLED'],
+        enum: ['PENDING_PAYMENT', 'STOCK_RESERVED', 'PAID', 'PAYMENT_FAILED', 'REFUND_PENDING', 'REFUNDED', 'SHIPPING', 'COMPLETED', 'CANCELLED'],
         default: 'PENDING_PAYMENT'
     },
     pricing: {
@@ -44,7 +44,13 @@ const orderSchema = new mongoose.Schema({
     version: { type: Number, default: 1 }
 }, {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     _id: false
+});
+
+orderSchema.virtual('totalAmount').get(function() {
+    return this.pricing ? this.pricing.grandTotal : undefined;
 });
 
 // Indexes

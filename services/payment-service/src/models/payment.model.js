@@ -10,12 +10,16 @@ const paymentSchema = new mongoose.Schema({
     refundedAmount: { type: Number, default: 0 },
     status: {
         type: String,
-        enum: ['PENDING', 'PROCESSING', 'SUCCESS', 'FAILED', 'REFUNDED'],
+        enum: ['PENDING', 'PROCESSING', 'SUCCESS', 'FAILED', 'PARTIALLY_REFUNDED', 'REFUNDED'],
         default: 'PENDING'
     },
     retryCount: { type: Number, default: 0 },
     lastRetryAt: { type: Date, default: null },
     providerRef: { type: String, default: null },
+    providerTransactionNo: { type: String, default: null },
+    bankCode: { type: String, default: null },
+    vnp_TxnRef: { type: String, default: null },
+    vnp_TransactionNo: { type: String, default: null },
     providerData: { type: mongoose.Schema.Types.Mixed, default: null },
     version: { type: Number, default: 1 }
 }, {

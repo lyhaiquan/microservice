@@ -3,7 +3,8 @@ const CartService = require('../services/cart.service');
 class CartController {
     static async addToCart(req, res, next) {
         try {
-            const { userId, productId, quantity } = req.body;
+            const { productId, quantity } = req.body;
+            const userId = req.user && req.user.id;
             
             if (!userId || !productId || !quantity) {
                 return res.status(400).json({ success: false, message: 'Missing userId, productId or quantity' });

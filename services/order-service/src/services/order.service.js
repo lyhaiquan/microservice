@@ -1,35 +1,14 @@
+const crypto = require('crypto');
 const Order = require('../models/order.model');
 const { producer } = require('../config/kafka');
 
-const PRODUCT_SERVICE_URL = process.env.PRODUCT_SERVICE_URL || 'http://product-service:5001';
-
 class OrderService {
+    static buildOrderId() {
+        return `ORD_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+    }
+
     static async createOrder(userId, items, totalAmount, idempotencyKey, extraFields = {}) {
-        // ============================================
-        // STEP 1: Atomic Stock Check — Call Product Service
-        // Trừ kho TRƯỚC khi tạo order. Nếu hết hàng → reject ngay.
-        // ============================================
-        for (const item of items) {
-            const productId = item.skuId || item.productId;
-            const response = await fetch(`${PRODUCT_SERVICE_URL}/api/products/decrease-stock`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ productId, quantity: item.quantity }),
-            });
-
-            if (!response.ok) {
-                const errorBody = await response.json().catch(() => ({}));
-                const err = new Error(errorBody.message || 'Không đủ hàng trong kho (Out of stock)');
-                err.status = 400;
-                throw err;
-            }
-        }
-
-        // ============================================
-        // STEP 2: Create Order — Stock đã được trừ thành công
-        // ============================================
-        const count = await Order.countDocuments();
-        const orderId = `ORD_${String(100001 + count).padStart(6, '0')}`;
+        const orderId = OrderService.buildOrderId();
 
         const region = extraFields.region || 'SOUTH';
         const userRegion = extraFields.userRegion || region;
@@ -38,13 +17,20 @@ class OrderService {
         const snapshottedItems = items.map(item => ({
             skuId: item.skuId || item.productId,
             productNameSnapshot: item.name || item.productNameSnapshot || 'Unknown',
-            unitPrice: item.price || item.unitPrice || 0,
-            quantity: item.quantity,
-            lineTotal: (item.price || item.unitPrice || 0) * item.quantity,
+            unitPrice: Number(item.price || item.unitPrice || 0),
+            quantity: Number(item.quantity),
+            lineTotal: Number(item.price || item.unitPrice || 0) * Number(item.quantity),
         }));
 
-        const itemsSubtotal = snapshottedItems.reduce((sum, i) => sum + i.lineTotal, 0);
-        const shippingFee = extraFields.shippingFee || 0;
+        const itemsSubtotal = snapshottedItems.reduce((sum, item) => sum + item.lineTotal, 0);
+        const shippingFee = Number(extraFields.shippingFee || 0);
+        const grandTotal = itemsSubtotal + shippingFee;
+
+        if (Number(totalAmount) !== grandTotal) {
+            const err = new Error('Invalid totalAmount for submitted items');
+            err.status = 400;
+            throw err;
+        }
 
         const newOrder = new Order({
             _id: orderId,
@@ -57,7 +43,7 @@ class OrderService {
             pricing: {
                 itemsSubtotal,
                 shippingFee,
-                grandTotal: itemsSubtotal + shippingFee,
+                grandTotal,
             },
             items: snapshottedItems,
             idempotencyKey,
@@ -66,18 +52,18 @@ class OrderService {
 
         const savedOrder = await newOrder.save();
 
-        // ============================================
-        // STEP 3: Emit Kafka Event (async notification)
-        // ============================================
         try {
+            const eventId = `ORDER_CREATED:${savedOrder._id}`;
             await producer.send({
                 topic: 'order-events',
                 messages: [{
-                    key: savedOrder._id.toString(),
+                    key: savedOrder._id,
                     value: JSON.stringify({
+                        eventId,
                         type: 'ORDER_CREATED',
-                        orderId: savedOrder._id.toString(),
+                        orderId: savedOrder._id,
                         userId: savedOrder.userId,
+                        userRegion: savedOrder.userRegion,
                         items: snapshottedItems,
                         totalAmount: savedOrder.pricing.grandTotal,
                         status: savedOrder.status,
@@ -85,21 +71,21 @@ class OrderService {
                     })
                 }]
             });
-            console.log(`✅ Event 'ORDER_CREATED' sent for order ${savedOrder._id}`);
+            console.log(`Event ORDER_CREATED sent for order ${savedOrder._id}`);
         } catch (error) {
-            console.error(`⚠️ Kafka event failed (order still valid): ${error.message}`);
+            console.error(`Kafka event failed. Order remains PENDING_PAYMENT for recovery: ${error.message}`);
         }
 
         return savedOrder;
     }
 
     static async getOrderById(orderId) {
-        return await Order.findById(orderId);
+        return Order.findById(orderId);
     }
 
     static async getOrderByKey(key) {
         if (!key) return null;
-        return await Order.findOne({ idempotencyKey: key });
+        return Order.findOne({ idempotencyKey: key });
     }
 }
 

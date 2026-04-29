@@ -15,8 +15,10 @@ class CartService {
                 throw err;
             }
 
-            if (product.quantity < quantity) {
-                const err = new Error(`Insufficient stock. Only ${product.quantity} items available.`);
+            const variant = Array.isArray(product.variants) && product.variants.length > 0 ? product.variants[0] : null;
+            if (!variant || variant.availableStock < quantity) {
+                const available = variant ? variant.availableStock : 0;
+                const err = new Error(`Insufficient stock. Only ${available} items available.`);
                 err.status = 400;
                 throw err;
             }
@@ -26,38 +28,42 @@ class CartService {
             
             if (!cart) {
                 cart = new Cart({
+                    _id: `CART_${userId}`,
                     userId,
+                    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
                     items: [{
-                        productId,
+                        skuId: variant.skuId || productId,
                         quantity,
-                        price: product.price,
-                        name: product.name
+                        priceSnapshot: variant.price,
+                        productNameSnapshot: product.name
                     }]
                 });
             } else {
-                const itemIndex = cart.items.findIndex(p => p.productId === productId);
+                const skuId = variant.skuId || productId;
+                const itemIndex = cart.items.findIndex(p => p.skuId === skuId);
                 if (itemIndex > -1) {
                     // Update quantity
                     cart.items[itemIndex].quantity += quantity;
                     
                     // re-check quantity vs product
-                    if (cart.items[itemIndex].quantity > product.quantity) {
-                         const err = new Error(`Cannot add more. Total requested exceeds available stock (${product.quantity}).`);
+                    if (cart.items[itemIndex].quantity > variant.availableStock) {
+                         const err = new Error(`Cannot add more. Total requested exceeds available stock (${variant.availableStock}).`);
                          err.status = 400;
                          throw err;
                     }
                     // Update price & name just in case they changed
-                    cart.items[itemIndex].price = product.price;
-                    cart.items[itemIndex].name = product.name;
+                    cart.items[itemIndex].priceSnapshot = variant.price;
+                    cart.items[itemIndex].productNameSnapshot = product.name;
                 } else {
                     // Add new item
                     cart.items.push({
-                        productId,
+                        skuId,
                         quantity,
-                        price: product.price,
-                        name: product.name
+                        priceSnapshot: variant.price,
+                        productNameSnapshot: product.name
                     });
                 }
+                cart.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
             }
             
             await cart.save();

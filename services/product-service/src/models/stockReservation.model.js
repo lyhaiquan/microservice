@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const stockReservationSchema = new mongoose.Schema({
+    orderId: { type: String, required: true, index: true },
     skuId: { type: String, required: true },
     checkoutId: { type: String, required: true, unique: true },
     userId: { type: String, required: true },
@@ -16,10 +17,11 @@ const stockReservationSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Indexes
-stockReservationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 900 });
+// Keep reservation records long enough for recovery/audit; recovery cron uses expiresAt to release stock.
+stockReservationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 7 * 24 * 60 * 60 });
 // checkoutId unique is already handled by `{ unique: true }` in schema definition.
 stockReservationSchema.index({ skuId: 1, status: 1 });
+stockReservationSchema.index({ orderId: 1, status: 1 });
 
 const StockReservation = mongoose.model('StockReservation', stockReservationSchema);
 

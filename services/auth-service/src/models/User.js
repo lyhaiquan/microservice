@@ -97,7 +97,8 @@ userSchema.pre('save', async function() {
         const rawEmail = this.email;
         this.perUserSalt = this.perUserSalt || crypto.randomBytes(16).toString('hex');
         this.email = encrypt(rawEmail);
-        this.emailHmac = generateHmac(rawEmail, this.perUserSalt);
+        const globalSalt = process.env.GLOBAL_EMAIL_SALT || 'shopee_global_salt_123';
+        this.emailHmac = generateHmac(rawEmail, globalSalt);
     }
     if (this.isModified('phone') && typeof this.phone === 'string') {
         this.phone = encrypt(this.phone);

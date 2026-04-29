@@ -7,7 +7,7 @@ const GROUP_ID = 'payment-group';
 const kafka = new Kafka({
     clientId: CLIENT_ID,
     brokers: KAFKA_BROKERS,
-    logLevel: logLevel.INFO,
+    logLevel: (logLevel && logLevel.INFO) || 4,
     retry: {
         initialRetryTime: 300,
         retries: 8
