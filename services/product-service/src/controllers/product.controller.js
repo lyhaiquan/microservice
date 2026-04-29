@@ -164,7 +164,6 @@ class ProductController {
 
             // Invalidate cache
             await ProductController.invalidateProductCache(productId);
-
             return res.status(200).json({
                 success: true,
                 message: 'Hạ tồn kho thành công',
@@ -174,8 +173,6 @@ class ProductController {
             return res.status(500).json({ success: false, message: error.message });
         }
     }
-
-
     // Tạo sản phẩm mới (Write) -> Clear Cache All
     static async createProduct(req, res) {
         try {
@@ -183,7 +180,6 @@ class ProductController {
             if (!authMiddleware.hasRole(req.user, 'ADMIN')) {
                 payload.sellerId = req.user.id;
             }
-
             const newProduct = await Product.create(payload);
             
             // Xóa cache danh sách chung do có thêm 1 item
