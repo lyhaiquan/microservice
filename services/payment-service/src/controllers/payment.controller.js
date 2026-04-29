@@ -18,6 +18,30 @@ class PaymentController {
             next(error);
         }
     }
+    static async refund(req, res, next) {
+        try {
+            const { id: paymentId } = req.params;
+            const { amount, reason } = req.body;
+
+            console.log(`[REFUND] Processing refund for payment ${paymentId}, amount: ${amount}, reason: ${reason}`);
+            
+            // Giả lập gọi gateway VNPay/Momo
+            const success = true; 
+
+            if (success) {
+                return res.status(200).json({ 
+                    success: true, 
+                    message: 'Refund processed successfully',
+                    data: { paymentId, refundedAmount: amount }
+                });
+            } else {
+                return res.status(400).json({ success: false, message: 'Refund failed at gateway' });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
 }
+
 
 module.exports = PaymentController;

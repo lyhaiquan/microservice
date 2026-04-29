@@ -2,7 +2,10 @@ const crypto = require('crypto');
 const qs = require('qs');
 const moment = require('moment');
 const Payment = require('../models/payment.model');
+const Notification = require('../../../common/src/models/notification.model');
+
 const { producer, consumer } = require('../config/kafka');
+
 
 class VNPayService {
     
@@ -123,10 +126,10 @@ class VNPayService {
             
             if (responseCode === '00' || responseCode === '07') {
                 // Thanh cong
-                await Payment.findOneAndUpdate(
+                const updatedPayment = await Payment.findOneAndUpdate(
                     { orderId: matchedOrderId },
                     { 
-                        status: 'COMPLETED',
+                        status: 'SUCCESS', // Đổi COMPLETED thành SUCCESS theo kế hoạch
                         vnp_TxnRef: vnpayParams['vnp_TxnRef'],
                         vnp_TransactionNo: vnpayParams['vnp_TransactionNo'],
                         bankCode: vnpayParams['vnp_BankCode']
@@ -134,17 +137,33 @@ class VNPayService {
                     { new: true, upsert: true }
                 );
 
-                // Publish Event
+                // Ghi Notification (Change Stream sẽ bắt được cái này)
+                try {
+                    await Notification.create({
+                        userId: updatedPayment.userId,
+                        type: 'PAYMENT_SUCCESS',
+                        content: `Thanh toán thành công cho đơn hàng ${matchedOrderId}`,
+                        metadata: {
+                            orderId: matchedOrderId,
+                            paymentId: updatedPayment._id
+                        }
+                    });
+                } catch (notifyErr) {
+                    console.error('⚠️ Lỗi khi ghi Notification:', notifyErr.message);
+                }
+
+                // Publish Event (Vẫn giữ cho các service khác nếu cần)
                 await producer.send({
                     topic: 'payment-confirmed',
                     messages: [
                         { value: JSON.stringify({ orderId: matchedOrderId, status: 'PAID' }) }
                     ]
                 });
-                console.log(`✅ [PAYMENT SERVICE] Đã update thanh toán và bắn event payment-confirmed cho order: ${matchedOrderId}`);
+                console.log(`✅ [PAYMENT SERVICE] Đã update thanh toán và ghi notification cho order: ${matchedOrderId}`);
 
                 return { code: '00', message: 'Payment Success', orderId: matchedOrderId };
-            } else {
+            }
+ else {
                 // That bai
                 await Payment.findOneAndUpdate(
                     { orderId: matchedOrderId },

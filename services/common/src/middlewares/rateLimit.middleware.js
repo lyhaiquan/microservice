@@ -1,36 +1,32 @@
-const { RateLimiterRedis, RateLimiterMemory } = require('rate-limiter-flexible');
-const redisClient = require('../redis');
+const { RateLimiterMongo, RateLimiterMemory } = require('rate-limiter-flexible');
+const mongoose = require('mongoose');
 
 /**
  * Helper to get the real client IP address.
- * Respects 'x-forwarded-for' header when behind a proxy like Nginx.
  */
 const getClientIp = (req) => {
     return req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
 };
 
 /**
- * Rate Limiter Middleware Factory
- * 
- * @param {Object} options 
- * @param {string} options.keyPrefix - Unique prefix for the redis keys (e.g., 'auth_login')
- * @param {number} options.points - Number of points (requests) allowed
- * @param {number} options.duration - Duration in seconds
- * @param {boolean} options.useUserId - If true, tries to limit by req.user.id instead of IP
+ * Rate Limiter Middleware Factory using MongoDB Store
  */
 const createRateLimiter = ({ keyPrefix, points, duration, useUserId = false }) => {
-    // 1. Main Redis Limiter
-    const redisLimiter = new RateLimiterRedis({
-        storeClient: redisClient,
+    // 1. Main MongoDB Limiter
+    const mongoLimiter = new RateLimiterMongo({
+        storeClient: mongoose.connection,
         keyPrefix: `rl:${keyPrefix}`,
         points: points,
         duration: duration,
-        // Insurance: Fallback to Memory if Redis is down
+        dbName: 'ecommerce_db',
+        tableName: 'rate_limits', // Collection name
+        // Insurance: Fallback to Memory if Mongo is down
         insuranceLimiter: new RateLimiterMemory({
             points: points,
             duration: duration,
         })
     });
+
 
     return async (req, res, next) => {
         // Determine the identifier (User ID or IP)
@@ -40,16 +36,16 @@ const createRateLimiter = ({ keyPrefix, points, duration, useUserId = false }) =
         }
 
         try {
-            await redisLimiter.consume(identifier);
+            await mongoLimiter.consume(identifier);
             next();
         } catch (rejRes) {
-            // Check if it's a "Rate Limit Rejection" or a "Redis Error"
+            // Check if it's a "Rate Limit Rejection" or a "Database Error"
             if (rejRes instanceof Error) {
-                // REDIS ERROR (Fail-Open Strategy)
-                // In production, we log this and let the request pass to maintain Availability
-                console.error(`⚠️ [RateLimit] Redis Error for ${keyPrefix}:`, rejRes.message);
+                // MONGO ERROR (Fail-Open Strategy)
+                console.error(`⚠️ [RateLimit] Mongo Error for ${keyPrefix}:`, rejRes.message);
                 return next();
             }
+
 
             // RATE LIMIT EXCEEDED
             const secs = Math.round(rejRes.msBeforeNext / 1000) || 1;

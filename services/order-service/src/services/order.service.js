@@ -1,97 +1,119 @@
 const Order = require('../models/order.model');
-const { producer } = require('../config/kafka');
-
-const PRODUCT_SERVICE_URL = process.env.PRODUCT_SERVICE_URL || 'http://product-service:5001';
+const Product = require('../models/product.model');
+const IdempotencyRecord = require('../../../common/src/models/idempotencyRecord.model');
+const mongoose = require('mongoose');
+const { runTransactionWithRetry } = require('../../../common/src/transaction');
+const crypto = require('crypto');
 
 class OrderService {
-    static async createOrder(userId, items, totalAmount, idempotencyKey, extraFields = {}) {
-        // ============================================
-        // STEP 1: Atomic Stock Check — Call Product Service
-        // Trừ kho TRƯỚC khi tạo order. Nếu hết hàng → reject ngay.
-        // ============================================
-        for (const item of items) {
-            const productId = item.skuId || item.productId;
-            const response = await fetch(`${PRODUCT_SERVICE_URL}/api/products/decrease-stock`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ productId, quantity: item.quantity }),
+    static async createOrder(userId, items, totalAmount, checkoutId, extraFields = {}) {
+        // Generate Idempotency Key if not provided
+        const idempotencyKey = crypto.createHash('sha256').update(userId + checkoutId).digest('hex');
+
+        return await runTransactionWithRetry(mongoose, async (session) => {
+            // 1. Check Idempotency Record
+            const existingRecord = await IdempotencyRecord.findById(idempotencyKey).session(session);
+            if (existingRecord) {
+                console.log(`[Idempotency] Found existing record for ${idempotencyKey}. Returning cached result.`);
+                return existingRecord.result;
+            }
+
+            // 2. Atomic Stock Check & Decrease
+            const snapshottedItems = [];
+            for (const item of items) {
+                const productId = item.skuId || item.productId;
+                
+                // Cập nhật tồn kho nguyên tử
+                const updatedProduct = await Product.findOneAndUpdate(
+                    { _id: productId, 'variants.0.availableStock': { $gte: item.quantity } },
+                    { $inc: { 'variants.0.availableStock': -item.quantity } },
+                    { session, new: true }
+                );
+
+                if (!updatedProduct) {
+                    throw new Error(`Sản phẩm ${productId} không đủ hàng hoặc không tồn tại.`);
+                }
+
+                snapshottedItems.push({
+                    skuId: productId,
+                    sellerId: updatedProduct.sellerId, // Lưu sellerId để thống kê
+                    productNameSnapshot: updatedProduct.name,
+                    unitPrice: updatedProduct.variants[0].price,
+                    quantity: item.quantity,
+                    lineTotal: updatedProduct.variants[0].price * item.quantity,
+                });
+            }
+
+            // 3. Create Order
+            const count = await Order.countDocuments().session(session);
+            const orderId = `ORD_${String(100001 + count).padStart(6, '0')}`;
+
+            const region = extraFields.region || 'SOUTH';
+            const userRegion = extraFields.userRegion || region;
+            const deliveryRegion = extraFields.deliveryRegion || region;
+            const itemsSubtotal = snapshottedItems.reduce((sum, i) => sum + i.lineTotal, 0);
+            const shippingFee = extraFields.shippingFee || 0;
+
+            const newOrder = new Order({
+                _id: orderId,
+                region,
+                userId,
+                userRegion,
+                deliveryRegion,
+                isCrossRegion: userRegion !== deliveryRegion,
+                status: 'PENDING_PAYMENT',
+                pricing: {
+                    itemsSubtotal,
+                    shippingFee,
+                    grandTotal: itemsSubtotal + shippingFee,
+                },
+                items: snapshottedItems,
+                idempotencyKey,
+                statusHistory: [{ status: 'PENDING_PAYMENT', timestamp: new Date() }],
             });
 
-            if (!response.ok) {
-                const errorBody = await response.json().catch(() => ({}));
-                const err = new Error(errorBody.message || 'Không đủ hàng trong kho (Out of stock)');
-                err.status = 400;
-                throw err;
-            }
-        }
+            const savedOrder = await newOrder.save({ session });
 
-        // ============================================
-        // STEP 2: Create Order — Stock đã được trừ thành công
-        // ============================================
-        const count = await Order.countDocuments();
-        const orderId = `ORD_${String(100001 + count).padStart(6, '0')}`;
+            // 4. Record Idempotency
+            await IdempotencyRecord.create([{
+                _id: idempotencyKey,
+                userId,
+                action: 'CREATE_ORDER',
+                result: savedOrder,
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 1 day
+            }], { session });
 
-        const region = extraFields.region || 'SOUTH';
-        const userRegion = extraFields.userRegion || region;
-        const deliveryRegion = extraFields.deliveryRegion || region;
-
-        const snapshottedItems = items.map(item => ({
-            skuId: item.skuId || item.productId,
-            productNameSnapshot: item.name || item.productNameSnapshot || 'Unknown',
-            unitPrice: item.price || item.unitPrice || 0,
-            quantity: item.quantity,
-            lineTotal: (item.price || item.unitPrice || 0) * item.quantity,
-        }));
-
-        const itemsSubtotal = snapshottedItems.reduce((sum, i) => sum + i.lineTotal, 0);
-        const shippingFee = extraFields.shippingFee || 0;
-
-        const newOrder = new Order({
-            _id: orderId,
-            region,
-            userId,
-            userRegion,
-            deliveryRegion,
-            isCrossRegion: userRegion !== deliveryRegion,
-            status: 'PENDING_PAYMENT',
-            pricing: {
-                itemsSubtotal,
-                shippingFee,
-                grandTotal: itemsSubtotal + shippingFee,
-            },
-            items: snapshottedItems,
-            idempotencyKey,
-            statusHistory: [{ status: 'PENDING_PAYMENT', timestamp: new Date() }],
+            console.log(`✅ Order ${orderId} created successfully with Transaction.`);
+            return savedOrder;
         });
 
-        const savedOrder = await newOrder.save();
-
-        // ============================================
-        // STEP 3: Emit Kafka Event (async notification)
-        // ============================================
+        // 5. Emit Event for Payment Service (outside transaction but after success)
         try {
+            const { producer } = require('../config/kafka');
             await producer.send({
-                topic: 'order-events',
+                topic: 'stock-events', // Bắn thẳng vào stock-events để Payment Service xử lý
                 messages: [{
-                    key: savedOrder._id.toString(),
+                    key: result._id.toString(),
                     value: JSON.stringify({
-                        type: 'ORDER_CREATED',
-                        orderId: savedOrder._id.toString(),
-                        userId: savedOrder.userId,
-                        items: snapshottedItems,
-                        totalAmount: savedOrder.pricing.grandTotal,
-                        status: savedOrder.status,
+                        type: 'STOCK_RESERVED',
+                        orderId: result._id.toString(),
+                        userId: result.userId,
+                        items: result.items,
+                        totalAmount: result.pricing.grandTotal,
+                        status: 'RESERVED',
                         timestamp: new Date().toISOString()
                     })
                 }]
             });
-            console.log(`✅ Event 'ORDER_CREATED' sent for order ${savedOrder._id}`);
+            console.log(`📡 [ORDER SERVICE] Event 'STOCK_RESERVED' emitted for ${result._id}`);
         } catch (error) {
-            console.error(`⚠️ Kafka event failed (order still valid): ${error.message}`);
+            console.error(`⚠️ Kafka emission failed: ${error.message}`);
         }
 
-        return savedOrder;
+        return result;
     }
+
+
 
     static async getOrderById(orderId) {
         return await Order.findById(orderId);

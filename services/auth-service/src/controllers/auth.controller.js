@@ -133,6 +133,81 @@ class AuthController {
             next(error);
         }
     }
+
+    // ============================================
+    // ADMIN APIs
+    // ============================================
+
+    static async getPendingSellers(req, res, next) {
+        try {
+            const pendingSellers = await User.find({
+                roles: 'SELLER',
+                status: 'PENDING'
+            }).select('-credentials -sessions');
+
+            res.status(200).json({
+                success: true,
+                data: pendingSellers
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async approveSeller(req, res, next) {
+        try {
+            const { id } = req.params;
+            const user = await User.findOneAndUpdate(
+                { _id: id, roles: 'SELLER', status: 'PENDING' },
+                { status: 'ACTIVE' },
+                { new: true }
+            );
+
+            if (!user) {
+                return res.status(404).json({ message: 'Pending seller not found' });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: 'Seller approved successfully',
+                data: { id: user._id, status: user.status }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async banUser(req, res, next) {
+        try {
+            const { id } = req.params;
+            
+            // Set status to BANNED and revoke all sessions
+            const user = await User.findByIdAndUpdate(
+                id,
+                { 
+                    status: 'BANNED',
+                    $set: { 
+                        "sessions.$[].isRevoked": true, 
+                        "sessions.$[].revokedAt": new Date() 
+                    }
+                },
+                { new: true }
+            );
+
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: 'User banned and all sessions revoked',
+                data: { id: user._id, status: user.status }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
+
 
 module.exports = AuthController;

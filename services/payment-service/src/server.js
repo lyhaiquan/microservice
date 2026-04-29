@@ -58,6 +58,10 @@ const startServer = async () => {
         VNPayService.listenOrderEvents().catch(err => {
             console.error('Error starting order-events consumer:', err);
         });
+
+        const { initRefundCron } = require('./cron/refund.job');
+        initRefundCron();
+
         
         server = app.listen(PORT, () => {
             console.log(`🚀 Payment Service is running on port ${PORT}`);

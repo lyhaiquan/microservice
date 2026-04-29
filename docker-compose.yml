@@ -156,7 +156,16 @@ services:
     depends_on: [kafka]
     networks: [shopee-network]
 
+  notification-service:
+    build: { context: ., dockerfile: services/notification-service/Dockerfile }
+    container_name: notification-service
+    environment:
+      - MONGO_URI=mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin
+    depends_on: [mongo-init]
+    networks: [shopee-network]
+
   api-gateway:
+
     image: nginx:alpine
     container_name: api-gateway
     ports: ["8080:8080"]

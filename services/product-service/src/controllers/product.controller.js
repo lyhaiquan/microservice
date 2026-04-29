@@ -9,8 +9,10 @@ class ProductController {
     // Helper function xóa cache search và list
     static async invalidateProductCache(productId = null) {
         try {
-            // Xóa cache danh sách chung
-            const keysToDelete = ['products:all'];
+            // Xóa cache danh sách chung (wildcard vì có nhiều filter combination)
+            const listKeys = await redisClient.keys('products:all:*');
+            const keysToDelete = [...listKeys];
+            
             if (productId) {
                 keysToDelete.push(`products:detail:${productId}`);
             }
@@ -24,18 +26,31 @@ class ProductController {
             if (keysToDelete.length > 0) {
                 await redisClient.del(keysToDelete);
             }
+
         } catch (err) {
             console.error('Lỗi khi xóa Redis Cache:', err.message);
         }
     }
 
-    // Láy danh sách sản phẩm (có Cache)
+    // Láy danh sách sản phẩm (có Cache & Filter)
     static async getAllProducts(req, res) {
         try {
-            const cacheKey = 'products:all';
+            const { 
+                minPrice, 
+                maxPrice, 
+                categoryId, 
+                sellerId, 
+                status = 'ACTIVE',
+                rating,
+                sort = 'newest' // newest, price_asc, price_desc
+            } = req.query;
+
+
+            // Xây dựng Cache Key dựa trên query params
+            const queryStr = JSON.stringify(req.query);
+            const cacheKey = `products:all:${queryStr}`;
             const cachedData = await redisClient.get(cacheKey);
 
-            // Cache Hit
             if (cachedData) {
                 return res.status(200).json({
                     success: true,
@@ -44,21 +59,39 @@ class ProductController {
                 });
             }
 
-            // Cache Miss
-            const products = await Product.find().sort({ createdAt: -1 });
+            // Xây dựng MongoDB Query
+            const mongoQuery = { status };
+
+            if (categoryId) mongoQuery.categoryId = categoryId;
+            if (sellerId) mongoQuery.sellerId = sellerId;
+            if (rating) mongoQuery.rating = { $gte: parseFloat(rating) };
+
             
-            // Lưu vào Redis
+            if (minPrice || maxPrice) {
+                mongoQuery['variants.0.price'] = {};
+                if (minPrice) mongoQuery['variants.0.price'].$gte = parseFloat(minPrice);
+                if (maxPrice) mongoQuery['variants.0.price'].$lte = parseFloat(maxPrice);
+            }
+
+            // Xây dựng Sort
+            let sortQuery = { createdAt: -1 };
+            if (sort === 'price_asc') sortQuery = { 'variants.0.price': 1 };
+            if (sort === 'price_desc') sortQuery = { 'variants.0.price': -1 };
+
+            const products = await Product.find(mongoQuery).sort(sortQuery).limit(50);
+            
             await redisClient.set(cacheKey, JSON.stringify(products), 'EX', CACHE_TTL);
 
             return res.status(200).json({
                 success: true,
-                meta: { source: 'mongodb' },
+                meta: { source: 'mongodb', count: products.length },
                 data: products
             });
         } catch (error) {
             return res.status(500).json({ success: false, message: error.message });
         }
     }
+
 
     // Lấy chi tiết 1 sản phẩm (có Cache)
     static async getProductById(req, res) {
@@ -222,6 +255,22 @@ class ProductController {
             return res.status(500).json({ success: false, message: error.message });
         }
     }
+    // ============================================
+    // ADMIN STATS
+    // ============================================
+
+    static async getProductCount(req, res, next) {
+        try {
+            const count = await Product.countDocuments({ status: 'ACTIVE' });
+            res.status(200).json({
+                success: true,
+                data: { count }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
+
 
 module.exports = ProductController;

@@ -15,7 +15,8 @@ class OrderConsumer {
                 if (status === 'PAID') {
                     try {
                         const updated = await Order.findOneAndUpdate(
-                            { _id: orderId, status: 'PENDING' },
+                            { _id: orderId, status: 'PENDING_PAYMENT' },
+
                             {
                                 $set: { status: 'PAID', paymentId: orderId },
                                 $push: {
