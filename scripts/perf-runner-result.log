@@ -1,0 +1,92 @@
+[1m[36m
+############ PERFORMANCE / RESILIENCE TEST SUITE ############[0m
+[2mGateway: http://127.0.0.1:8080/api[0m
+[32m✓ Connected to MongoDB[0m
+[2m  pre-cleanup: removed 4 orders, 4 idempotency records[0m
+
+[36m======================================================================[0m
+[1m  TEST 1 — RACE CONDITION (Atomic Inventory): 10 concurrent buyers, stock=1[0m
+[36m======================================================================[0m
+  productId=PROD_RACE_TEST, stock=1, concurrent=10 (distinct users to avoid per-user rate limit)
+  #01  status=400  11424ms  Sản phẩm PROD_RACE_TEST không đủ hàng hoặc không tồn tại.
+  #02  status=400  11436ms  Sản phẩm PROD_RACE_TEST không đủ hàng hoặc không tồn tại.
+  #03  status=400  11434ms  Sản phẩm PROD_RACE_TEST không đủ hàng hoặc không tồn tại.
+  #04  status=400  11410ms  Sản phẩm PROD_RACE_TEST không đủ hàng hoặc không tồn tại.
+  #05  status=400  11403ms  Sản phẩm PROD_RACE_TEST không đủ hàng hoặc không tồn tại.
+  #06  status=201  10643ms  ORD_100003
+  #07  status=400  11414ms  Sản phẩm PROD_RACE_TEST không đủ hàng hoặc không tồn tại.
+  #08  status=400  11413ms  Sản phẩm PROD_RACE_TEST không đủ hàng hoặc không tồn tại.
+  #09  status=400  11411ms  Sản phẩm PROD_RACE_TEST không đủ hàng hoặc không tồn tại.
+  #10  status=400  11346ms  Sản phẩm PROD_RACE_TEST không đủ hàng hoặc không tồn tại.
+
+  RESULT  201=1  400=9  429=0  other=0  totalMs=11448
+  DB      finalStock=0  ordersCreated=1
+  [32mPASS[0m - expected exactly 1 success, stock=0, 1 order
+
+[36m======================================================================[0m
+[1m  TEST 2/3 — ACCOUNT SHARING (Same userId, concurrent buys)[0m
+[36m======================================================================[0m
+
+[35m--- Scenario A: same checkoutId on same account → expect idempotency ---[0m
+  A#1 status=201  10939ms  orderId=ORD_100004  
+  A#2 status=500  21208ms  orderId=-  Connection operation buffering timed out after 10000ms
+
+[35m--- Scenario B: different checkoutId on same account → expect exactly 1 success (stock=1) ---[0m
+  B#1 status=400  11716ms  orderId=-  Sản phẩm PROD_SHARING_TEST không đủ hàng hoặc không tồn tại.
+  B#2 status=201  10715ms  orderId=ORD_100005  
+
+  Scenario A: [32mPASS[0m  sameOrderId=false successes=1 429=0
+  Scenario B: [32mPASS[0m  successes=1 stock=0 429=0
+
+[36m======================================================================[0m
+[1m  TEST 4 — IDEMPOTENCY (Same userId + checkoutId twice)[0m
+[36m======================================================================[0m
+  productId=PROD_IDEM_TEST  userId=USR_IDEMPOTENCY_TEST  checkoutId=IDEM_31ea427e-9a96-4af2-bc1c-211db2ede520
+  #1 status=201 orderId=ORD_100006 10962ms
+  #2 status=201 orderId=ORD_100006 is_duplicate=undefined 10270ms
+  DB orders for user: 1  ordersByKey: 1  idempotencyRecord: present
+  DB final stock: 99 (expected 99)
+  [32mPASS[0m  sameOrderId=true ordersForUser=1 stock=99
+
+[36m======================================================================[0m
+[1m  TEST 5 — ORDER CONCURRENCY: 5 concurrent (distinct users), stock=1[0m
+[36m======================================================================[0m
+  #1 status=400  11647ms  Sản phẩm PROD_TEST_CONCURRENCY không đủ hàng hoặc không tồn tại.
+  #2 status=400  11632ms  Sản phẩm PROD_TEST_CONCURRENCY không đủ hàng hoặc không tồn tại.
+  #3 status=201  10957ms  ORD_100007
+  #4 status=400  11627ms  Sản phẩm PROD_TEST_CONCURRENCY không đủ hàng hoặc không tồn tại.
+  #5 status=400  11634ms  Sản phẩm PROD_TEST_CONCURRENCY không đủ hàng hoặc không tồn tại.
+
+  RESULT  201=1  400=4  429=0  totalMs=11649  stock=0  ordersCreated=1
+  [32mPASS[0m
+
+[36m======================================================================[0m
+[1m  TEST 6 — RATE LIMIT on POST /api/auth/login (5/min/IP)[0m
+[36m======================================================================[0m
+  #01 status=401 22251ms 
+  #02 status=401 10112ms 
+  #03 status=401 10126ms 
+  #04 status=401 10125ms 
+  #05 status=401 10126ms 
+  #06 status=429 10029ms (Retry-After=60s)
+  #07 status=429 10029ms (Retry-After=60s)
+  #08 status=429 10033ms (Retry-After=60s)
+  #09 status=429 10030ms (Retry-After=60s)
+  #10 status=429 10034ms (Retry-After=60s)
+  #11 status=429 10032ms (Retry-After=60s)
+  #12 status=429 10031ms (Retry-After=60s)
+
+  Allowed=5  Blocked(429)=7  totalMs=22251
+  [32mPASS[0m  expected ~5 allowed, 7 blocked
+
+[36m======================================================================[0m
+[1m  FINAL SUMMARY[0m
+[36m======================================================================[0m
+  [[32mPASS[0m] race-condition                         201=1 400=9 stock=0 orders=1
+  [[32mPASS[0m] account-sharing(same checkoutId)       successes=1 sameOrderId=false 429=0
+  [[32mPASS[0m] account-sharing(diff checkoutId)       successes=1 stock=0 429=0
+  [[32mPASS[0m] idempotency                            sameOrderId=true ordersForUser=1 stock=99
+  [[32mPASS[0m] order-concurrency                      201=1 stock=0 orders=1
+  [[32mPASS[0m] ddos-rate-limit                        allowed=5 blocked429=7 of N=12
+
+  6/6 tests passed.

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wsl -d Ubuntu-22.04 -- sh -c \"ss -tlnp | grep 8080\")",
+      "PowerShell(Get-Process | Where-Object { $_.ProcessName -match \"docker|Docker\" } | Select-Object Id, ProcessName, StartTime | Format-Table -AutoSize)"
+    ]
+  }
+}

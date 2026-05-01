@@ -130,7 +130,8 @@ services:
       - PORT=5002
       - MONGO_URI=mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    depends_on: [kafka]
+      - REDIS_HOST=redis
+    depends_on: [kafka, redis]
     networks: [shopee-network]
 
   order-service:
@@ -142,7 +143,8 @@ services:
       - MONGO_URI=mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - PRODUCT_SERVICE_URL=http://product-service:5001
-    depends_on: [kafka]
+      - REDIS_HOST=redis
+    depends_on: [kafka, redis]
     networks: [shopee-network]
 
   payment-service:
@@ -153,7 +155,8 @@ services:
       - PORT=5004
       - MONGO_URI=mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    depends_on: [kafka]
+      - REDIS_HOST=redis
+    depends_on: [kafka, redis]
     networks: [shopee-network]
 
   notification-service:
