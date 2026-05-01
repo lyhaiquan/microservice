@@ -1,0 +1,46 @@
+const fs = require('fs');
+const path = require('path');
+
+const pkg = {
+  name: 'shopee-microservices',
+  version: '2.0.0',
+  description: 'Shopee E-Commerce - Monorepo single package.json',
+  scripts: {
+    'start:auth': 'node services/auth-service/src/server.js',
+    'start:product': 'node services/product-service/src/server.js',
+    'start:cart': 'node services/cart-service/src/server.js',
+    'start:order': 'node services/order-service/src/server.js',
+    'start:payment': 'node services/payment-service/src/server.js',
+    'start:all': 'concurrently -n AUTH,PROD,CART,ORDR,PAY -c blue,green,yellow,cyan,magenta "npm run start:auth" "npm run start:product" "npm run start:cart" "npm run start:order" "npm run start:payment"',
+    test: 'jest --runInBand --detectOpenHandles',
+    'test:e2e': 'node scripts/final-check.js',
+    'test:race': 'node scripts/account-sharing-race-test.js',
+    'postinstall': 'node scripts/fix-common-paths.js'
+  },
+  dependencies: {
+    argon2: '^0.41.1',
+    axios: '^1.14.0',
+    bcryptjs: '^3.0.3',
+    concurrently: '^9.2.1',
+    cors: '^2.8.6',
+    dotenv: '^17.3.1',
+    express: '^5.2.1',
+    ioredis: '^5.5.0',
+    jsonwebtoken: '^9.0.3',
+    kafkajs: '^2.2.4',
+    moment: '^2.30.1',
+    mongoose: '^8.0.0',
+    'node-cron': '^4.2.1',
+    qs: '^6.15.0',
+    'rate-limiter-flexible': '^11.0.1'
+  },
+  devDependencies: {
+    jest: '^30.3.0',
+    'mongodb-memory-server': '^11.0.1',
+    nodemon: '^3.1.14',
+    supertest: '^7.2.2'
+  }
+};
+
+fs.writeFileSync(path.join(__dirname, '..', 'package.json'), JSON.stringify(pkg, null, 2) + '\n');
+console.log('✅ Root package.json written');
