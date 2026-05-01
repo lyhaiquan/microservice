@@ -1,19 +1,5 @@
 {
-    "name": "common",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "test": "jest --runInBand --detectOpenHandles"
-    },
-    "dependencies": {
-        "ioredis": "^5.10.1",
-        "jsonwebtoken": "^9.0.3",
-        "rate-limiter-flexible": "^11.0.1"
-    },
-    "peerDependencies": {
-        "mongoose": ">=7.0.0"
-    },
-    "devDependencies": {
-        "jest": "^30.3.0"
-    }
+  "name": "common",
+  "version": "1.0.0",
+  "main": "index.js"
 }

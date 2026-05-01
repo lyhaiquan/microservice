@@ -1,4 +1,4 @@
-const Notification = require('../../common/src/models/notification.model');
+const Notification = require('../../../common/src/models/notification.model');
 
 /**
  * Worker to listen for new notifications using MongoDB Change Streams.
@@ -8,9 +8,12 @@ const startNotificationWorker = async () => {
         console.log('🔔 Notification Worker starting...');
 
         // Watch the notifications collection for 'insert' events
-        const changeStream = Notification.watch([
-            { $match: { operationType: 'insert' } }
-        ], { fullDocument: 'updateLookup' });
+        // MongoDB change streams BẮT BUỘC readConcern 'majority' (default global của
+        // app là 'local' để giảm latency cho read endpoints).
+        const changeStream = Notification.watch(
+            [{ $match: { operationType: 'insert' } }],
+            { fullDocument: 'updateLookup', readConcern: { level: 'majority' } }
+        );
 
         changeStream.on('change', (change) => {
             const doc = change.fullDocument;

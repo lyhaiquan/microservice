@@ -1,5 +1,7 @@
 const OrderService = require('../services/order.service');
-const { redisClient } = require('../../../common');
+const { redisClient, invalidateGroup } = require('../../../common/src/cache');
+
+const IDX_STATS = 'idx:orders:stats';
 
 // Cache ngắn cho order detail vì status thay đổi thường xuyên
 const ORDER_CACHE_TTL = 10; // 10 giây
@@ -36,11 +38,10 @@ class OrderController {
                 });
             }
 
-            // Invalidate stats cache khi có order mới (vì stats aggregate từ orders)
-            const statsKeys = await redisClient.keys('stats:*');
-            if (statsKeys.length > 0) {
-                await redisClient.del(statsKeys);
-            }
+            // Invalidate stats cache khi có order mới. Dùng SET-based index thay vì
+            // KEYS 'stats:*' (KEYS là O(N) blocking trên toàn keyspace).
+            // stats.controller.js phải set cache qua setTracked(IDX_STATS, ...) để hoạt động.
+            await invalidateGroup(IDX_STATS);
 
             return res.status(201).json({ success: true, data: result.order });
         } catch (error) {

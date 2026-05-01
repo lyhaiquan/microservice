@@ -23,7 +23,9 @@
  * ============================================================
  */
 
-const mongoose = require('../services/product-service/node_modules/mongoose');
+// Sau khi monolith hoá, mongoose nằm ở root node_modules — không còn
+// services/product-service/node_modules.
+const mongoose = require('mongoose');
 const Product = require('../services/product-service/src/models/product.model');
 
 const MONGO_URI = 'mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin';
@@ -40,16 +42,17 @@ async function testRaceCondition() {
         });
         console.log('✅ Connected to MongoDB for Race Condition Test');
 
-        // 1. Tạo sản phẩm test khớp với schema hiện tại
-        const testSlug = `race-test-${Date.now()}`;
+        // 1. Tạo sản phẩm test khớp với schema hiện tại (_id String là required)
+        const testId = `PROD_RACE_DIRECT_${Date.now()}`;
         const product = await Product.create({
+            _id: testId,
             sellerId: 'SELLER_TEST',
             sellerRegion: 'SOUTH',
             name: 'Race Condition Test Product',
-            slug: testSlug,
+            slug: `race-test-${Date.now()}`,
             categoryId: 'CAT_TEST',
             variants: [{
-                skuId: 'SKU_RACE_TEST',
+                skuId: testId,
                 price: 100000,
                 totalStock: INITIAL_STOCK,
                 availableStock: INITIAL_STOCK,

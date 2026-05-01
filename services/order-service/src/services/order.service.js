@@ -1,5 +1,6 @@
 const Order = require('../models/order.model');
 const Product = require('../models/product.model');
+const Counter = require('../models/counter.model');
 const IdempotencyRecord = require('../../../common/src/models/idempotencyRecord.model');
 const mongoose = require('mongoose');
 const { runTransactionWithRetry } = require('../../../common/src/transaction');
@@ -7,26 +8,28 @@ const crypto = require('crypto');
 
 class OrderService {
     static async createOrder(userId, items, totalAmount, checkoutId, extraFields = {}) {
-        // Idempotency Key: ưu tiên client-provided (extraFields.idempotencyKey),
-        // fallback về sha256(userId+checkoutId) để giữ tương thích với callers cũ.
         const idempotencyKey = extraFields.idempotencyKey
             ? String(extraFields.idempotencyKey)
             : crypto.createHash('sha256').update(userId + checkoutId).digest('hex');
 
-        return await runTransactionWithRetry(mongoose, async (session) => {
-            // 1. Check Idempotency Record
-            const existingRecord = await IdempotencyRecord.findById(idempotencyKey).session(session);
+        const result = await runTransactionWithRetry(mongoose, async (session) => {
+            // 1. Idempotency check — read by _id, dùng .lean() vì chỉ cần raw value
+            const existingRecord = await IdempotencyRecord.findById(idempotencyKey)
+                .session(session)
+                .lean();
             if (existingRecord) {
-                console.log(`[Idempotency] Found existing record for ${idempotencyKey}. Returning cached result.`);
+                console.log(`[Idempotency] Found existing record for ${idempotencyKey}.`);
                 return { cached: true, order: existingRecord.result };
             }
 
-            // 2. Atomic Stock Check & Decrease
+            // 2. Atomic stock decrement (per-item). findOneAndUpdate với điều kiện
+            //    availableStock >= quantity là atomic, không bị race condition.
             const snapshottedItems = [];
             for (const item of items) {
                 const productId = item.skuId || item.productId;
-                
-                // Cập nhật tồn kho nguyên tử
+
+                // Không dùng projection 'variants.0.price' vì mongoose hydration với
+                // dotted-path subdoc projection không trả về subdoc field đúng → undefined.
                 const updatedProduct = await Product.findOneAndUpdate(
                     { _id: productId, 'variants.0.availableStock': { $gte: item.quantity } },
                     { $inc: { 'variants.0.availableStock': -item.quantity } },
@@ -39,7 +42,7 @@ class OrderService {
 
                 snapshottedItems.push({
                     skuId: productId,
-                    sellerId: updatedProduct.sellerId, // Lưu sellerId để thống kê
+                    sellerId: updatedProduct.sellerId,
                     productNameSnapshot: updatedProduct.name,
                     unitPrice: updatedProduct.variants[0].price,
                     quantity: item.quantity,
@@ -47,9 +50,11 @@ class OrderService {
                 });
             }
 
-            // 3. Create Order
-            const count = await Order.countDocuments().session(session);
-            const orderId = `ORD_${String(100001 + count).padStart(6, '0')}`;
+            // 3. Sinh orderId qua atomic counter (O(1)) thay cho countDocuments() O(N).
+            //    countDocuments inside transaction còn gây lock contention nghiêm trọng
+            //    khi orders collection lớn.
+            const seq = await Counter.next('order', session);
+            const orderId = `ORD_${String(100000 + seq).padStart(6, '0')}`;
 
             const region = extraFields.region || 'SOUTH';
             const userRegion = extraFields.userRegion || region;
@@ -77,54 +82,56 @@ class OrderService {
 
             const savedOrder = await newOrder.save({ session });
 
-            // 4. Record Idempotency
             await IdempotencyRecord.create([{
                 _id: idempotencyKey,
                 userId,
                 action: 'CREATE_ORDER',
                 result: savedOrder,
-                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 1 day
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
             }], { session });
 
             console.log(`✅ Order ${orderId} created successfully with Transaction.`);
             return { cached: false, order: savedOrder };
         });
 
-        // 5. Emit Event for Payment Service (outside transaction but after success)
-        try {
-            const { producer } = require('../config/kafka');
-            await producer.send({
-                topic: 'stock-events', // Bắn thẳng vào stock-events để Payment Service xử lý
-                messages: [{
-                    key: result._id.toString(),
-                    value: JSON.stringify({
-                        type: 'STOCK_RESERVED',
-                        orderId: result._id.toString(),
-                        userId: result.userId,
-                        items: result.items,
-                        totalAmount: result.pricing.grandTotal,
-                        status: 'RESERVED',
-                        timestamp: new Date().toISOString()
-                    })
-                }]
-            });
-            console.log(`📡 [ORDER SERVICE] Event 'STOCK_RESERVED' emitted for ${result._id}`);
-        } catch (error) {
-            console.error(`⚠️ Kafka emission failed: ${error.message}`);
+        // BUG FIX: code Kafka emit cũ nằm sau `return await ...` nên không bao giờ
+        // chạy → saga bị đứt. Chuyển ra ngoài và chỉ emit khi không phải cached.
+        if (!result.cached) {
+            try {
+                const { producer } = require('../config/kafka');
+                const order = result.order;
+                await producer.send({
+                    topic: 'stock-events',
+                    messages: [{
+                        key: order._id.toString(),
+                        value: JSON.stringify({
+                            type: 'STOCK_RESERVED',
+                            orderId: order._id.toString(),
+                            userId: order.userId,
+                            items: order.items,
+                            totalAmount: order.pricing.grandTotal,
+                            status: 'RESERVED',
+                            timestamp: new Date().toISOString()
+                        })
+                    }]
+                });
+                console.log(`📡 [ORDER] Event 'STOCK_RESERVED' emitted for ${order._id}`);
+            } catch (error) {
+                console.error(`⚠️ Kafka emission failed: ${error.message}`);
+            }
         }
 
         return result;
     }
 
-
-
+    // Read-only — .lean() bỏ mongoose hydration, nhanh 3-5x.
     static async getOrderById(orderId) {
-        return await Order.findById(orderId);
+        return await Order.findById(orderId).lean();
     }
 
     static async getOrderByKey(key) {
         if (!key) return null;
-        return await Order.findOne({ idempotencyKey: key });
+        return await Order.findOne({ idempotencyKey: key }).lean();
     }
 }
 

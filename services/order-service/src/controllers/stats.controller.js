@@ -1,5 +1,8 @@
 const Order = require('../models/order.model');
-const { redisClient } = require('../../../common');
+const { redisClient, setTracked } = require('../../../common');
+
+// Phải khớp với IDX_STATS dùng trong order.controller.js để invalidate hoạt động.
+const IDX_STATS = 'idx:orders:stats';
 
 // Cache TTL cho các stats (giây)
 const STATS_CACHE_TTL = 1800; // 30 phút — dữ liệu thống kê ít thay đổi
@@ -48,7 +51,7 @@ class StatsController {
             ]);
 
             // Cache kết quả
-            await redisClient.set(cacheKey, JSON.stringify(stats), 'EX', STATS_CACHE_TTL);
+            await setTracked(IDX_STATS, cacheKey, JSON.stringify(stats), STATS_CACHE_TTL);
 
             res.status(200).json({
                 success: true,
@@ -107,7 +110,7 @@ class StatsController {
             ]);
 
             const result = stats[0] || { totalRevenue: 0, totalQuantity: 0, orderCount: 0 };
-            await redisClient.set(cacheKey, JSON.stringify(result), 'EX', STATS_CACHE_TTL);
+            await setTracked(IDX_STATS, cacheKey, JSON.stringify(result), STATS_CACHE_TTL);
 
             res.status(200).json({
                 success: true,
@@ -160,7 +163,7 @@ class StatsController {
             ]);
 
             const result = stats[0] || { totalRevenue: 0, totalQuantity: 0 };
-            await redisClient.set(cacheKey, JSON.stringify(result), 'EX', STATS_CACHE_TTL);
+            await setTracked(IDX_STATS, cacheKey, JSON.stringify(result), STATS_CACHE_TTL);
 
             res.status(200).json({
                 success: true,

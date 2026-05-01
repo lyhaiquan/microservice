@@ -1,8 +1,43 @@
 {
+  "name": "shopee-monolith",
+  "version": "1.0.0",
+  "scripts": {
+    "start:auth": "node services/auth-service/src/server.js",
+    "start:product": "node services/product-service/src/server.js",
+    "start:cart": "node services/cart-service/src/server.js",
+    "start:order": "node services/order-service/src/server.js",
+    "start:payment": "node services/payment-service/src/server.js",
+    "start:notification": "node services/notification-service/src/server.js",
+    "dev:auth": "nodemon services/auth-service/src/server.js",
+    "dev:product": "nodemon services/product-service/src/server.js",
+    "dev:cart": "nodemon services/cart-service/src/server.js",
+    "dev:order": "nodemon services/order-service/src/server.js",
+    "dev:payment": "nodemon services/payment-service/src/server.js",
+    "dev:notification": "nodemon services/notification-service/src/server.js",
+    "test": "jest --runInBand --detectOpenHandles",
+    "perf": "node scripts/perf-runner.js"
+  },
   "dependencies": {
+    "argon2": "^0.41.1",
     "axios": "^1.15.2",
-    "crypto": "^1.0.1",
+    "bcryptjs": "^3.0.3",
+    "common": "file:./services/common",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "mongoose": "^9.6.0"
+    "express": "^5.2.1",
+    "ioredis": "^5.5.0",
+    "jsonwebtoken": "^9.0.3",
+    "kafkajs": "^2.2.4",
+    "moment": "^2.30.1",
+    "mongoose": "^9.6.0",
+    "node-cron": "^4.2.1",
+    "qs": "^6.15.0",
+    "rate-limiter-flexible": "^11.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0",
+    "mongodb-memory-server": "^11.0.1",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
   }
 }
