@@ -1,10 +1,8 @@
-version: "3.8"
 
 services:
   # MongoDB Replica Set Nodes
   mongo1:
     image: mongo:6.0
-    container_name: mongo1
     hostname: mongo1
     command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27017"]
     ports:
@@ -19,7 +17,6 @@ services:
 
   mongo2:
     image: mongo:6.0
-    container_name: mongo2
     hostname: mongo2
     command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27017"]
     ports:
@@ -34,7 +31,6 @@ services:
 
   mongo3:
     image: mongo:6.0
-    container_name: mongo3
     hostname: mongo3
     command: ["mongod", "--replSet", "dbrs", "--bind_ip_all", "--port", "27017"]
     ports:
@@ -49,7 +45,6 @@ services:
 
   mongo-init:
     image: mongo:6.0
-    container_name: mongo-init
     depends_on:
       mongo1: { condition: service_healthy }
       mongo2: { condition: service_healthy }
@@ -64,7 +59,6 @@ services:
   # Redis
   redis:
     image: redis:7-alpine
-    container_name: redis
     ports:
       - "6379:6379"
     networks:
@@ -73,7 +67,6 @@ services:
   # Kafka & Zookeeper
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
-    container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
     networks:
@@ -81,7 +74,6 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
-    container_name: kafka
     depends_on:
       - zookeeper
     ports:
@@ -99,7 +91,6 @@ services:
   # Microservices
   auth-service:
     build: { context: ., dockerfile: services/auth-service/Dockerfile }
-    container_name: auth-service
     ports: ["5050:5050"]
     environment:
       - PORT=5050
@@ -112,7 +103,6 @@ services:
 
   product-service:
     build: { context: ., dockerfile: services/product-service/Dockerfile }
-    container_name: product-service
     ports: ["5001:5001"]
     environment:
       - PORT=5001
@@ -124,7 +114,6 @@ services:
 
   cart-service:
     build: { context: ., dockerfile: services/cart-service/Dockerfile }
-    container_name: cart-service
     ports: ["5002:5002"]
     environment:
       - PORT=5002
@@ -136,7 +125,6 @@ services:
 
   order-service:
     build: { context: ., dockerfile: services/order-service/Dockerfile }
-    container_name: order-service
     ports: ["5003:5003"]
     environment:
       - PORT=5003
@@ -149,7 +137,6 @@ services:
 
   payment-service:
     build: { context: ., dockerfile: services/payment-service/Dockerfile }
-    container_name: payment-service
     ports: ["5004:5004"]
     environment:
       - PORT=5004
@@ -161,7 +148,6 @@ services:
 
   notification-service:
     build: { context: ., dockerfile: services/notification-service/Dockerfile }
-    container_name: notification-service
     environment:
       - MONGO_URI=mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin
     depends_on: [mongo-init]
@@ -169,7 +155,6 @@ services:
 
   api-gateway:
     image: nginx:alpine
-    container_name: api-gateway
     ports: ["8081:8080"]
     volumes:
       - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
