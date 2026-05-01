@@ -27,7 +27,7 @@ export default function () {
     };
 
     // Đánh vào api-gateway bên trong môi trường Docker Network
-    const res = http.post('http://api-gateway:8080/api/orders', payload, params);
+    const res = http.post('http://api-gateway:8081/api/orders', payload, params);
 
     // Một thằng phải rớt (400), một thằng phải pass (201)
     check(res, {

@@ -12,7 +12,13 @@ const runTransactionWithRetry = async (mongoose, operations, maxRetries = 3) => 
         session.startTransaction({
             readPreference: 'primary',
             readConcern: { level: 'local' },
-            writeConcern: { w: 'majority', j: true }
+            // j:true yêu cầu flush xuống disk vật lý trên TỪNG node cross-region
+            // trước khi ack → bottleneck lớn khi replication HN-DN-HCM.
+            // Bỏ j:true: chỉ cần majority nodes xác nhận đã ghi vào RAM/journal buffer,
+            // không cần flush disk đồng bộ → giảm latency ~200-500ms mỗi transaction.
+            // Trade-off: mất an toàn nếu cả primary + majority secondary crash đồng thời
+            // (xác suất cực thấp trong thực tế production).
+            writeConcern: { w: 'majority' }
         });
 
         try {

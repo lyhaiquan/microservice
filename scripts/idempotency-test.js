@@ -20,9 +20,13 @@
 
 const { MongoClient } = require('mongodb');
 const crypto = require('crypto');
+const { buyerToken } = require('./auth_helper');
 
-const API_GATEWAY = 'http://127.0.0.1:8080/api';
+const API_GATEWAY = 'http://127.0.0.1:8081/api';
 const MONGO_URI = 'mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin';
+// userId phải khớp với JWT trong auth_helper (USR_BUYER_001) để tránh idempotency
+// hash bị sai lệch giữa các lần chạy + để rate-limit theo userId hoạt động đúng.
+const TEST_USER_ID = 'USR_BUYER_001';
 
 const colors = {
     reset: '\x1b[0m',
@@ -68,7 +72,7 @@ async function runTest() {
     console.log(`🔑 Key: ${idempotencyKey}`);
 
     const payload = {
-        userId: '000000000000000000000001',
+        userId: TEST_USER_ID,
         items: [{
             productId: productId,
             quantity: 1,
@@ -76,14 +80,23 @@ async function runTest() {
             name: 'Test Product'
         }],
         totalAmount: 2000000,
-        idempotencyKey: idempotencyKey
+        // Gửi cả idempotencyKey (ưu tiên) lẫn checkoutId (fallback) để bảo vệ
+        // ngay cả khi server cũ chưa hỗ trợ field idempotencyKey.
+        idempotencyKey: idempotencyKey,
+        checkoutId: idempotencyKey
+    };
+
+    const reqHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${buyerToken}`,
+        'X-Idempotency-Key': idempotencyKey
     };
 
     // --- REQUEST #1 ---
     console.log(`\n📡 Sending Request #1 ...`);
     const res1 = await fetch(`${API_GATEWAY}/orders`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: reqHeaders,
         body: JSON.stringify(payload)
     });
     const data1 = await res1.json();
@@ -102,7 +115,7 @@ async function runTest() {
     console.log(`\n📡 Sending Request #2 (Duplicate Key) ...`);
     const res2 = await fetch(`${API_GATEWAY}/orders`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: reqHeaders,
         body: JSON.stringify(payload)
     });
     const data2 = await res2.json();
