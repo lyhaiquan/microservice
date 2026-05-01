@@ -6,23 +6,26 @@ const CACHE_TTL = 3600;
 
 class ProductController {
     
-    // Helper function xóa cache search và list
+    // Helper function xóa cache search, list, và count
     static async invalidateProductCache(productId = null) {
         try {
             // Xóa cache danh sách chung (wildcard vì có nhiều filter combination)
             const listKeys = await redisClient.keys('products:all:*');
             const keysToDelete = [...listKeys];
-            
+
             if (productId) {
                 keysToDelete.push(`products:detail:${productId}`);
             }
-            
-            // Tìm tất cả các key search để xóa
+
+            // Xóa cache search
             const searchKeys = await redisClient.keys('products:search:*');
             if (searchKeys.length > 0) {
                 keysToDelete.push(...searchKeys);
             }
-            
+
+            // Xóa cache count (vì tổng số product có thể thay đổi)
+            keysToDelete.push('products:count:active');
+
             if (keysToDelete.length > 0) {
                 await redisClient.del(keysToDelete);
             }
@@ -261,9 +264,24 @@ class ProductController {
 
     static async getProductCount(req, res, next) {
         try {
+            const cacheKey = 'products:count:active';
+            const cached = await redisClient.get(cacheKey);
+            if (cached) {
+                return res.status(200).json({
+                    success: true,
+                    meta: { source: 'redis' },
+                    data: { count: parseInt(cached) }
+                });
+            }
+
             const count = await Product.countDocuments({ status: 'ACTIVE' });
+
+            // Cache 10 phút — count thay đổi ít, invalidate khi create/delete product
+            await redisClient.set(cacheKey, String(count), 'EX', 600);
+
             res.status(200).json({
                 success: true,
+                meta: { source: 'mongodb' },
                 data: { count }
             });
         } catch (error) {

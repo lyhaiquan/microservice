@@ -26,5 +26,7 @@ async function testRateLimit() {
     }
 }
 
-// testRateLimit();
-console.log("Script created.");
+testRateLimit().catch(err => {
+    console.error("FATAL:", err.message);
+    process.exit(1);
+});

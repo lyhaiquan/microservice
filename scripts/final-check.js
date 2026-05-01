@@ -2,7 +2,7 @@ const axios = require('axios');
 const crypto = require('crypto');
 const qs = require('qs');
 
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = 'http://localhost:8081/api';
 let authToken = '';
 let userId = '';
 let productId = '';
@@ -150,7 +150,7 @@ async function runTest() {
                     vnp_OrderInfo: `Thanh toan don hang ${orderId}`,
                     vnp_OrderType: 'other',
                     vnp_Amount: totalAmount * 100,
-                    vnp_ReturnUrl: 'http://localhost:8080/api/payments/vnpay-return',
+                    vnp_ReturnUrl: 'http://localhost:8081/api/payments/vnpay-return',
                     vnp_IpAddr: '127.0.0.1',
                     vnp_CreateDate: createDate
                 };

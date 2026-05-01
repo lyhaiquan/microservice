@@ -13,8 +13,8 @@ export const options = {
 };
 
 // host.docker.internal dùng cho Docker container K6 trỏ về Localhost của máy host (chạy api-gateway)
-// Nếu chạy k6 trực tiếp bằng command `k6 run` thì sửa thành http://localhost:8080/api
-const BASE_URL = __ENV.BASE_URL || 'http://host.docker.internal:8080/api';
+// Nếu chạy k6 trực tiếp bằng command `k6 run` thì sửa thành http://localhost:8081/api
+const BASE_URL = __ENV.BASE_URL || 'http://host.docker.internal:8081/api';
 
 export default function () {
     // 1. Dùng Math.random() tạo email ngẫu nhiên để tránh trùng Unique Lỗi Database

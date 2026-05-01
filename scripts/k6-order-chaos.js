@@ -9,23 +9,43 @@ export const options = {
     }
 };
 
-const BASE_URL = __ENV.BASE_URL || 'http://host.docker.internal:8080/api';
+const BASE_URL = __ENV.BASE_URL || 'http://host.docker.internal:8081/api';
+// productId phải tồn tại trong DB & có stock đủ lớn. Mặc định trỏ tới
+// product được seed bởi perf-runner trước khi chạy k6 (xem scripts/perf-runner.js).
+const PRODUCT_ID = __ENV.PRODUCT_ID || 'PROD_K6_LOAD';
 
 export function setup() {
     // 1. Tạo ngẫu nhiên 1 User duy nhất cho toàn bộ VU dùng chung
     const id = Math.floor(Math.random() * 10000000);
     const email = `chaos_sre_${id}@ptit.edu.vn`;
-    const payload = JSON.stringify({ email: email, password: 'Password123!', name: `SRE Tester ${id}` });
+    const password = 'Password123!';
     const params = { headers: { 'Content-Type': 'application/json' } };
 
-    const regRes = http.post(`${BASE_URL}/auth/register`, payload, params);
-    
-    // Auth-service sẽ trả về { message: "..", token: "ey..." }
-    const token = regRes.json().token;
-    console.log(`[SETUP] Khởi tạo SRE JWT Token: ${token ? 'SUCCESS' : 'FAILED'}`);
-    
-    // Nếu token bị thiếu, thử lấy từ json nếu response khác cấu trúc
-    return { token: token };
+    // Register cần đầy đủ {email, password, fullName, region} theo schema thực tế
+    const regPayload = JSON.stringify({
+        email,
+        password,
+        fullName: `SRE Tester ${id}`,
+        region: 'NORTH'
+    });
+    const regRes = http.post(`${BASE_URL}/auth/register`, regPayload, params);
+    if (regRes.status !== 201) {
+        console.error(`[SETUP] Register FAILED status=${regRes.status} body=${regRes.body}`);
+        return { token: null };
+    }
+
+    // Auth-service register KHÔNG trả token → gọi login để lấy token
+    const loginRes = http.post(`${BASE_URL}/auth/login`,
+        JSON.stringify({ email, password }), params);
+    let token = null;
+    let userId = null;
+    try {
+        const j = loginRes.json();
+        token = j.token;
+        userId = j.user && j.user.id;
+    } catch (_) {}
+    console.log(`[SETUP] JWT Token: ${token ? 'SUCCESS' : 'FAILED'} userId=${userId}`);
+    return { token, userId };
 }
 
 export default function (data) {
@@ -34,12 +54,11 @@ export default function (data) {
         return;
     }
 
-    // Một ObjectId MongoDB hợp lệ tượng trưng cho Product
-    const fakeProductId = "60b8d295f1f4e15d8868c2f0"; 
-    
     const payload = JSON.stringify({
-        userId: "60b8d295f1f4e15d8868c2f0",
-        items: [{ productId: "60b8d295f1f4e15d8868c2f0", quantity: 1, price: 99.99 }],
+        userId: data.userId || `K6_USER_${__VU}`,
+        // checkoutId khác nhau mỗi iteration để không bị idempotency cache hit
+        checkoutId: `K6_CHK_${__VU}_${__ITER}_${Date.now()}`,
+        items: [{ productId: PRODUCT_ID, quantity: 1 }],
         totalAmount: 99.99
     });
 
@@ -53,13 +72,12 @@ export default function (data) {
     // --- TIẾN HÀNH ĐẶT HÀNG ---
     const res = http.post(`${BASE_URL}/orders`, payload, params);
 
-    // Ghi nhận lỗi HTTP (5xx)
-    const success = check(res, {
-        'Tạo đơn hàng thành công (201)': (r) => r.status === 201 || r.status === 200,
-        'Ngắt quãng (5xx)': (r) => r.status >= 500,
+    check(res, {
+        'Tạo đơn hàng (201/200)': (r) => r.status === 201 || r.status === 200,
+        'Không 5xx (chaos)': (r) => r.status < 500,
     });
 
-    if (!success && res.status >= 500) {
+    if (res.status >= 500) {
         console.error(`[CHAOS ERROR] Order thất bại. Status: ${res.status} | Body: ${res.body}`);
     }
 

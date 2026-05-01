@@ -30,7 +30,7 @@ beforeAll(async () => {
     process.env.VNP_TMN_CODE = 'GUHO01S5';
     process.env.VNP_HASH_SECRET = 'IFG6MHMPGZMJKE20TZ2EF3Q737LLBM';
     process.env.VNP_URL = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
-    process.env.VNP_RETURN_URL = 'http://localhost:8080/api/payments/vnpay-return';
+    process.env.VNP_RETURN_URL = 'http://localhost:8081/api/payments/vnpay-return';
 });
 
 afterAll(async () => {

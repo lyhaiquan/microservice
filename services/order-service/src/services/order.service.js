@@ -7,15 +7,18 @@ const crypto = require('crypto');
 
 class OrderService {
     static async createOrder(userId, items, totalAmount, checkoutId, extraFields = {}) {
-        // Generate Idempotency Key if not provided
-        const idempotencyKey = crypto.createHash('sha256').update(userId + checkoutId).digest('hex');
+        // Idempotency Key: ưu tiên client-provided (extraFields.idempotencyKey),
+        // fallback về sha256(userId+checkoutId) để giữ tương thích với callers cũ.
+        const idempotencyKey = extraFields.idempotencyKey
+            ? String(extraFields.idempotencyKey)
+            : crypto.createHash('sha256').update(userId + checkoutId).digest('hex');
 
         return await runTransactionWithRetry(mongoose, async (session) => {
             // 1. Check Idempotency Record
             const existingRecord = await IdempotencyRecord.findById(idempotencyKey).session(session);
             if (existingRecord) {
                 console.log(`[Idempotency] Found existing record for ${idempotencyKey}. Returning cached result.`);
-                return existingRecord.result;
+                return { cached: true, order: existingRecord.result };
             }
 
             // 2. Atomic Stock Check & Decrease
@@ -84,7 +87,7 @@ class OrderService {
             }], { session });
 
             console.log(`✅ Order ${orderId} created successfully with Transaction.`);
-            return savedOrder;
+            return { cached: false, order: savedOrder };
         });
 
         // 5. Emit Event for Payment Service (outside transaction but after success)

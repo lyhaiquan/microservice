@@ -21,7 +21,7 @@
 
 const { MongoClient, ObjectId } = require('mongodb');
 
-const API_GATEWAY = 'http://127.0.0.1:8080/api';
+const API_GATEWAY = 'http://127.0.0.1:8081/api';
 const MONGO_URI = 'mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin';
 const CONCURRENT_REQUESTS = 10;
 const PRODUCT_STOCK = 1;

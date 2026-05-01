@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const API_URL = 'http://localhost:8080/api/auth/login';
+const API_URL = 'http://localhost:8081/api/auth/login';
 
 async function testAuthRateLimit() {
     console.log('🚀 Bắt đầu test Token Bucket trên Auth Service...');
@@ -32,7 +32,7 @@ async function testAuthRateLimit() {
 }
 
 async function testProductRateLimit() {
-    const PRODUCT_URL = 'http://localhost:8080/api/products';
+    const PRODUCT_URL = 'http://localhost:8081/api/products';
     console.log('\n🚀 Bắt đầu test Strict Leaky Bucket trên Product Service...');
     console.log('Target: ', PRODUCT_URL);
 

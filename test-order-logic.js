@@ -39,13 +39,15 @@ async function test() {
 
         // 2. Test First Call (Should succeed)
         console.log("\n--- Testing First Order Call ---");
-        const order1 = await OrderService.createOrder(userId, items, 200, checkoutId);
-        console.log("Order 1 Created:", order1._id);
+        const r1 = await OrderService.createOrder(userId, items, 200, checkoutId);
+        const order1 = r1.order;
+        console.log("Order 1 Created:", order1._id, "cached:", r1.cached);
 
         // 3. Test Idempotency (Second Call with same checkoutId)
         console.log("\n--- Testing Idempotency (Second Call) ---");
-        const order2 = await OrderService.createOrder(userId, items, 200, checkoutId);
-        console.log("Order 2 (Should be same as Order 1):", order2._id);
+        const r2 = await OrderService.createOrder(userId, items, 200, checkoutId);
+        const order2 = r2.order;
+        console.log("Order 2 (Should be same as Order 1):", order2._id, "cached:", r2.cached);
 
         if (order1._id === order2._id) {
             console.log("✅ Idempotency Check Passed!");

@@ -2,6 +2,7 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { generateHmac } = require('../../../common/src/security/crypto.util');
+const { redisClient } = require('../../../common');
 
 class AuthController {
     static async register(req, res, next) {
@@ -39,6 +40,9 @@ class AuthController {
                 credentials: { passwordHash: password } // Model sẽ hash bằng argon2
             });
             await user.save();
+
+            // Invalidate pending sellers cache (có thể có seller mới đăng ký)
+            await redisClient.del('admin:pending_sellers').catch(() => {});
 
             res.status(201).json({
                 message: 'User registered successfully',
@@ -140,13 +144,27 @@ class AuthController {
 
     static async getPendingSellers(req, res, next) {
         try {
+            const cacheKey = 'admin:pending_sellers';
+            const cached = await redisClient.get(cacheKey);
+            if (cached) {
+                return res.status(200).json({
+                    success: true,
+                    meta: { source: 'redis' },
+                    data: JSON.parse(cached)
+                });
+            }
+
             const pendingSellers = await User.find({
                 roles: 'SELLER',
                 status: 'PENDING'
             }).select('-credentials -sessions');
 
+            // Cache 10 phút — chỉ thay đổi khi seller mới đăng ký hoặc admin approve
+            await redisClient.set(cacheKey, JSON.stringify(pendingSellers), 'EX', 600);
+
             res.status(200).json({
                 success: true,
+                meta: { source: 'mongodb' },
                 data: pendingSellers
             });
         } catch (error) {
@@ -166,6 +184,9 @@ class AuthController {
             if (!user) {
                 return res.status(404).json({ message: 'Pending seller not found' });
             }
+
+            // Invalidate pending sellers cache (seller vừa bị xóa khỏi danh sách pending)
+            await redisClient.del('admin:pending_sellers').catch(() => {});
 
             res.status(200).json({
                 success: true,

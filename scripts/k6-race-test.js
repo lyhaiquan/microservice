@@ -6,7 +6,7 @@ export const options = {
     iterations: 2,
 };
 
-const BASE_URL = 'http://host.docker.internal:8080/api'; // API Gateway qua Docker bridge
+const BASE_URL = 'http://host.docker.internal:8081/api'; // API Gateway qua Docker bridge
 const PRODUCT_ID = __ENV.PRODUCT_ID;
 const TOKEN = __ENV.TOKEN;
 
