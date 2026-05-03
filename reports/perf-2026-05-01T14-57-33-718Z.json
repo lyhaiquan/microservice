@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-05-01T14:58:16.851Z",
+  "gateway": "http://127.0.0.1:8081/api",
+  "passed": 7,
+  "failed": 0,
+  "skipped": 1,
+  "total": 8,
+  "suites": [
+    {
+      "name": "race-condition",
+      "pass": true,
+      "detail": "201=1 400=9 stock=0 orders=1"
+    },
+    {
+      "name": "account-sharing(same checkoutId)",
+      "pass": true,
+      "detail": "successes=2 sameOrderId=true 429=0"
+    },
+    {
+      "name": "account-sharing(diff checkoutId)",
+      "pass": true,
+      "detail": "successes=1 stock=0 429=0"
+    },
+    {
+      "name": "idempotency",
+      "pass": true,
+      "detail": "sameOrderId=true is_duplicate=true ordersForUser=1 stock=99"
+    },
+    {
+      "name": "order-concurrency",
+      "pass": true,
+      "detail": "201=1 stock=0 orders=1"
+    },
+    {
+      "name": "integration",
+      "pass": true,
+      "detail": "exitCode=0 durationMs=4072"
+    },
+    {
+      "name": "ddos-rate-limit",
+      "pass": true,
+      "detail": "allowed=5 blocked429=7 of N=12"
+    },
+    {
+      "name": "k6-order-chaos",
+      "pass": null,
+      "detail": "k6 binary not installed (skip)"
+    }
+  ]
+}

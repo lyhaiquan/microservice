@@ -2,7 +2,20 @@
   "permissions": {
     "allow": [
       "Bash(wsl -d Ubuntu-22.04 -- sh -c \"ss -tlnp | grep 8080\")",
-      "PowerShell(Get-Process | Where-Object { $_.ProcessName -match \"docker|Docker\" } | Select-Object Id, ProcessName, StartTime | Format-Table -AutoSize)"
+      "PowerShell(Get-Process | Where-Object { $_.ProcessName -match \"docker|Docker\" } | Select-Object Id, ProcessName, StartTime | Format-Table -AutoSize)",
+      "Bash(npm install *)",
+      "Bash(npm --version)",
+      "Bash(timeout 8 node services/auth-service/src/server.js)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(timeout 8 node services/product-service/src/server.js)",
+      "Bash(timeout 8 node services/cart-service/src/server.js)",
+      "Bash(timeout 12 node --env-file=services/order-service/.env services/order-service/src/server.js)",
+      "Bash(timeout 12 node --env-file=services/payment-service/.env services/payment-service/src/server.js)",
+      "Bash(timeout 12 node services/notification-service/src/server.js)",
+      "Bash(node -e \"console.log\\('mongodb:', require.resolve\\('mongodb'\\)\\); console.log\\('mongoose:', require.resolve\\('mongoose'\\)\\);\")",
+      "Bash(timeout 45 node scripts/stats-aggregation-test.js)",
+      "Bash(docker compose *)",
+      "Bash(timeout 60 node scripts/account-sharing-race-test.js)"
     ]
   }
 }
