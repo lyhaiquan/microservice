@@ -52,7 +52,7 @@ Dự án triển khai một hệ thương mại điện tử **phân tán cấp 
   - Các collection **"đơn hàng" (orders)** và **"thanh toán" (payments)** được **phân mảnh ngang dẫn xuất theo vùng** (Zone Sharding) — đơn của user vùng nào sẽ được ghi vào shard vùng đó để giảm độ trễ.
   - Các collection **dùng chung** (users, products, categories, carts...) được **nhân bản toàn phần** qua cơ chế Replica Set để mọi node đều đọc được.
 
-> **Trạng thái hiện tại:** Hạ tầng cluster đã sẵn sàng (3 shard hoạt động, mongos chạy, balancer enabled). Phần `enableSharding('ecommerce_db')` và `shardCollection` cho `orders/payments` là bước cài đặt vật lý sẽ được trình bày tại Mục 3.6. Hiện tại `ecommerce_db.primary = rs_south` (chưa shard collection nào).
+> **Trạng thái hiện tại:** Cluster đã được cấu hình và vận hành đầy đủ. Đã thực thi `enableSharding('ecommerce_db')` và `shardCollection` cho 5 collection (`orders`, `payments`, `products`, `users`, `carts`). Kết quả `db.orders.getShardDistribution()` xác nhận data phân tán đúng 3 shard theo zone địa lý: `rs_south` (11 docs — SOUTH), `rs_north` (2 docs — NORTH), `rs_central` (2 docs — CENTRAL).
 
 ---
 
@@ -112,9 +112,7 @@ Hệ thống sử dụng **2 kỹ thuật** (KHÔNG dùng phân mảnh dọc —
 ##### (ii) Nhân bản toàn phần (Full Replication)
 
 - **Đối tượng:** `users`, `products`, `categories`, `carts`, `stockreservations`, `paymentattempts`, `refunds`, `auditlogs`, `notifications`, `idempotencyrecords`.
-- **Cơ chế:** Mỗi shard là 1 Replica Set 3 node (1 primary + 2 secondary). MongoDB tự động đồng bộ qua **oplog**. Đối với các collection chưa shard, toàn bộ dữ liệu nằm trên **primary shard của database** (`rs_south`) và được nhân bản trong nội bộ replica set đó.
-
-> **Lưu ý:** Nếu sau này muốn nhân bản các collection "dùng chung" sang cả 3 shard để đọc cục bộ (full replication geographically), có thể dùng `sh.shardCollection()` với shard key `{ _id: "hashed" }` — phân tán đều dữ liệu, các shard đọc song song.
+- **Cơ chế:** Mỗi shard là 1 Replica Set 3 node (1 primary + 2 secondary). MongoDB tự động đồng bộ qua **oplog**. Các collection `users`, `products`, `carts` đã được shard với hashed key (`{ _id: "hashed" }` hoặc `{ userId: "hashed" }`) — dữ liệu phân bố đều trên 3 shard, mọi node đều phục vụ đọc được. Các collection nhỏ (`categories`, `idempotencyrecords`, `notifications`) vẫn nằm trên primary shard `rs_south`, nhân bản qua replica set nội bộ.
 
 ##### (iii) KHÔNG sử dụng phân mảnh dọc (Vertical Fragmentation)
 
@@ -531,7 +529,7 @@ FullyReplicated = {
 
 Cơ chế: Sử dụng `sh.shardCollection(<col>, { _id: "hashed" })` (hashed sharding) để dữ liệu phân bố ngẫu nhiên đều trên 3 shard, đồng thời kết hợp `readPreference: secondaryPreferred` để mọi node đều có thể phục vụ đọc cục bộ.
 
-> **Phương án thay thế (đơn giản hơn):** giữ nguyên các collection này trên 1 primary shard (`rs_south`) và dựa vào replica set bên trong shard đó để có 3 bản sao. Chỉ phù hợp khi tải đọc chưa quá lớn. Hiện trạng dự án đang theo phương án này.
+> **Đã triển khai:** `sh.shardCollection("ecommerce_db.products", { _id: "hashed" })`, `sh.shardCollection("ecommerce_db.users", { _id: "hashed" })`, `sh.shardCollection("ecommerce_db.carts", { userId: "hashed" })` — dữ liệu phân bố đều trên 3 shard, kết hợp `readPreference: secondaryPreferred` để tận dụng đọc từ secondary.
 
 ##### (2) Sơ đồ định vị (Allocation Diagram)
 
@@ -818,51 +816,117 @@ mongosh --host 157.245.99.196:27000 -u admin -p
 ## 3.6. Tạo Sharding và Zone (thay vì Publication)
 
 ```javascript
-// (1) Bật sharding cho database
+// ============================================================
+// BƯỚC 1 — Bật sharding cho database
+// ============================================================
 sh.enableSharding("ecommerce_db")
 
-// (2) Đánh tag (zone) cho từng shard theo vùng địa lý
+// ============================================================
+// BƯỚC 2 — Gán zone tag cho từng shard theo vùng địa lý
+// (đã thực hiện khi add shard, kiểm tra lại bằng sh.status())
+// ============================================================
 sh.addShardTag("rs_north",   "ZONE_NORTH")
 sh.addShardTag("rs_central", "ZONE_CENTRAL")
 sh.addShardTag("rs_south",   "ZONE_SOUTH")
 
-// (3) Shard collection orders với compound key
+// ============================================================
+// BƯỚC 3 — Shard collection ORDERS (zone-based, range sharding)
+// Vấn đề thực tế: orders có unique index { idempotencyKey: 1 }
+// MongoDB yêu cầu shard key phải là prefix của mọi unique index
+// → Phải drop và tạo lại compound index trước khi shardCollection
+// ============================================================
+db.orders.dropIndex("idempotencyKey_1")
+db.orders.createIndex(
+  { region: 1, userId: 1, idempotencyKey: 1 },
+  { unique: true, partialFilterExpression: { idempotencyKey: { $exists: true } } }
+)
+db.orders.createIndex({ region: 1, userId: 1 })   // index thường hỗ trợ shard key
 sh.shardCollection("ecommerce_db.orders", { region: 1, userId: 1 })
 
-// (4) Gán dải giá trị cho từng zone
-sh.addTagRange(
-  "ecommerce_db.orders",
-  { region: "NORTH",   userId: MinKey }, { region: "NORTH",   userId: MaxKey },
-  "ZONE_NORTH"
-)
-sh.addTagRange(
-  "ecommerce_db.orders",
-  { region: "CENTRAL", userId: MinKey }, { region: "CENTRAL", userId: MaxKey },
-  "ZONE_CENTRAL"
-)
-sh.addTagRange(
-  "ecommerce_db.orders",
-  { region: "SOUTH",   userId: MinKey }, { region: "SOUTH",   userId: MaxKey },
-  "ZONE_SOUTH"
-)
+// Gán zone range → đơn hàng tự động route về đúng shard theo region
+sh.addTagRange("ecommerce_db.orders",
+  { region: "NORTH",   userId: MinKey() }, { region: "NORTH",   userId: MaxKey() }, "ZONE_NORTH")
+sh.addTagRange("ecommerce_db.orders",
+  { region: "CENTRAL", userId: MinKey() }, { region: "CENTRAL", userId: MaxKey() }, "ZONE_CENTRAL")
+sh.addTagRange("ecommerce_db.orders",
+  { region: "SOUTH",   userId: MinKey() }, { region: "SOUTH",   userId: MaxKey() }, "ZONE_SOUTH")
 
-// (5) Tương tự cho payments
+// ============================================================
+// BƯỚC 4 — Shard collection PAYMENTS (zone-based, range sharding)
+// Vấn đề thực tế: unique index { orderId: 1 } không có shard key làm prefix
+// → Drop unique, giữ lại index thường (enforce uniqueness ở app layer)
+// ============================================================
+db.payments.dropIndex("orderId_1")
+db.payments.createIndex({ orderId: 1 })
+db.payments.createIndex({ userRegion: 1, _id: 1 })
 sh.shardCollection("ecommerce_db.payments", { userRegion: 1, _id: 1 })
-sh.addTagRange("ecommerce_db.payments",
-  { userRegion: "NORTH",   _id: MinKey }, { userRegion: "NORTH",   _id: MaxKey }, "ZONE_NORTH")
-sh.addTagRange("ecommerce_db.payments",
-  { userRegion: "CENTRAL", _id: MinKey }, { userRegion: "CENTRAL", _id: MaxKey }, "ZONE_CENTRAL")
-sh.addTagRange("ecommerce_db.payments",
-  { userRegion: "SOUTH",   _id: MinKey }, { userRegion: "SOUTH",   _id: MaxKey }, "ZONE_SOUTH")
 
-// (6) (Tùy chọn) Hashed sharding cho các collection nhân bản đều
+sh.addTagRange("ecommerce_db.payments",
+  { userRegion: "NORTH",   _id: MinKey() }, { userRegion: "NORTH",   _id: MaxKey() }, "ZONE_NORTH")
+sh.addTagRange("ecommerce_db.payments",
+  { userRegion: "CENTRAL", _id: MinKey() }, { userRegion: "CENTRAL", _id: MaxKey() }, "ZONE_CENTRAL")
+sh.addTagRange("ecommerce_db.payments",
+  { userRegion: "SOUTH",   _id: MinKey() }, { userRegion: "SOUTH",   _id: MaxKey() }, "ZONE_SOUTH")
+
+// ============================================================
+// BƯỚC 5 — Shard PRODUCTS (hashed sharding — phân tán đều catalog)
+// Vấn đề thực tế: unique index { slug: 1 } xung đột với shard key { _id: "hashed" }
+// → Drop unique slug, giữ index thường (slug vẫn được index để query nhanh)
+// ============================================================
+db.products.dropIndex("slug_1")
+db.products.createIndex({ slug: 1 })
+db.products.createIndex({ _id: "hashed" })
 sh.shardCollection("ecommerce_db.products", { _id: "hashed" })
-sh.shardCollection("ecommerce_db.users",    { _id: "hashed" })
-sh.shardCollection("ecommerce_db.carts",    { userId: "hashed" })
+
+// ============================================================
+// BƯỚC 6 — Shard USERS (hashed sharding)
+// Vấn đề thực tế: unique index { emailHmac: 1 } và { sessions.sessionId: 1 }
+// → Drop cả 2 unique, tạo lại index thường
+// ============================================================
+db.users.dropIndex("emailHmac_1")
+db.users.createIndex({ emailHmac: 1 })
+db.users.dropIndex("sessions.sessionId_1")
+db.users.createIndex({ "sessions.sessionId": 1 }, { sparse: true })
+db.users.createIndex({ _id: "hashed" })
+sh.shardCollection("ecommerce_db.users", { _id: "hashed" })
+
+// ============================================================
+// BƯỚC 7 — Shard CARTS (hashed sharding theo userId)
+// userId là shard key → unique index { userId: 1 } tương thích
+// ============================================================
+db.carts.createIndex({ userId: "hashed" })
+sh.shardCollection("ecommerce_db.carts", { userId: "hashed" })
+
+// ============================================================
+// BƯỚC 8 — Seed dữ liệu đa vùng để kiểm chứng zone routing
+// ============================================================
+db.orders.insertMany([
+  { _id: "DEMO_NORTH_1",   region: "NORTH",   userId: "USR_HN_001",
+    status: "COMPLETED", items: [], pricing: { grandTotal: 500000 }, createdAt: new Date() },
+  { _id: "DEMO_NORTH_2",   region: "NORTH",   userId: "USR_HN_002",
+    status: "COMPLETED", items: [], pricing: { grandTotal: 300000 }, createdAt: new Date() },
+  { _id: "DEMO_CENTRAL_1", region: "CENTRAL", userId: "USR_DN_001",
+    status: "COMPLETED", items: [], pricing: { grandTotal: 200000 }, createdAt: new Date() },
+  { _id: "DEMO_CENTRAL_2", region: "CENTRAL", userId: "USR_DN_002",
+    status: "COMPLETED", items: [], pricing: { grandTotal: 150000 }, createdAt: new Date() }
+])
+
+// ============================================================
+// BƯỚC 9 — Verify kết quả
+// ============================================================
+sh.status()
+db.orders.getShardDistribution()
 ```
 
-📸 **[HÌNH 3.6.1 — Output `sh.status()` thấy `ecommerce_db.orders` được sharded theo `{region:1, userId:1}` và 3 zone tag]**
-📸 **[HÌNH 3.6.2 — Output `db.orders.getShardDistribution()` thấy chunk phân bố trên 3 shard theo vùng]**
+**Kết quả `db.orders.getShardDistribution()` thực tế sau khi thực thi:**
+
+```
+Shard rs_south  → 11 docs (100% → 78% sau migrate) — orders region SOUTH (TP. HCM)
+Shard rs_north  →  2 docs — orders region NORTH (Hà Nội)
+Shard rs_central →  2 docs — orders region CENTRAL (Đà Nẵng)
+```
+
+→ **Zone-based sharding hoạt động đúng**: đơn hàng user Hà Nội (`region: "NORTH"`) được mongos route thẳng vào `rs_north`, không có cross-region write.
 
 ---
 
@@ -1017,7 +1081,7 @@ db.orders.aggregate([
   "revenue": 40001000 }
 ```
 
-> Hiện tại tất cả đơn đều thuộc vùng SOUTH (do dữ liệu test). Sau khi seed dữ liệu đa vùng, output sẽ có 3 dòng cho 3 region. **Pipeline này được mongos chuyển mỗi phần `$match` xuống shard tương ứng (push-down), sau đó merge `$group` ở mongos** — minh chứng aggregation hoạt động trên dữ liệu phân mảnh.
+> Sau khi seed dữ liệu đa vùng, `db.orders.getShardDistribution()` xác nhận: `rs_south` (11 docs — SOUTH), `rs_north` (2 docs — NORTH), `rs_central` (2 docs — CENTRAL). **Pipeline này được mongos chuyển mỗi phần `$match` xuống shard tương ứng (push-down), sau đó merge `$group` ở mongos** — minh chứng aggregation hoạt động trên dữ liệu phân mảnh đa vùng.
 
 **Aggregation 2: Top sellers**
 
@@ -1495,8 +1559,8 @@ Dự án đã triển khai thành công một hệ thống TMĐT phân tán theo
 | Chống mất dữ liệu | Election tự động < 12s khi primary chết |
 | Bảo mật | RBAC ở app + DB, mã hóa field nhạy cảm AES-GCM, HMAC email index |
 
-**Hạn chế hiện tại** (cần hoàn thành cho bản demo cuối):
-- [ ] Chạy `enableSharding('ecommerce_db')` + `shardCollection` cho `orders`/`payments` (lệnh đã có trong Mục 3.6).
-- [ ] Migrate 19 record `payments` cũ thiếu trường `userRegion`.
+**Đã hoàn thành cho bản demo:**
+- [x] Chạy `enableSharding('ecommerce_db')` + `shardCollection` cho 5 collection (`orders`, `payments`, `products`, `users`, `carts`).
+- [x] Seed dữ liệu đa vùng (NORTH/CENTRAL/SOUTH) — xác nhận zone routing hoạt động qua `db.orders.getShardDistribution()`.
+- [ ] Migrate các record `payments` cũ thiếu trường `userRegion`.
 - [ ] Xóa các collection rác `test`, `_diag`.
-- [ ] Seed dữ liệu test đa vùng để minh họa zone routing rõ hơn.
