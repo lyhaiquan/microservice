@@ -23,6 +23,7 @@ const crypto = require('crypto');
 const { buyerToken } = require('./auth_helper');
 
 const API_GATEWAY = 'http://127.0.0.1:8081/api';
+// client - > api -> orderservice -> mongodb (ecommerce_db.orders)
 const MONGO_URI = 'mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin';
 // userId phải khớp với JWT trong auth_helper (USR_BUYER_001) để tránh idempotency
 // hash bị sai lệch giữa các lần chạy + để rate-limit theo userId hoạt động đúng.

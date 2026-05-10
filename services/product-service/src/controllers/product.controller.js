@@ -5,7 +5,7 @@ const redisClient = require('../config/redis');
 const CACHE_TTL = 3600;
 
 class ProductController {
-    
+
     // Helper function xóa cache search, list, và count
     static async invalidateProductCache(productId = null) {
         try {
@@ -38,11 +38,11 @@ class ProductController {
     // Láy danh sách sản phẩm (có Cache & Filter)
     static async getAllProducts(req, res) {
         try {
-            const { 
-                minPrice, 
-                maxPrice, 
-                categoryId, 
-                sellerId, 
+            const {
+                minPrice,
+                maxPrice,
+                categoryId,
+                sellerId,
                 status = 'ACTIVE',
                 rating,
                 sort = 'newest' // newest, price_asc, price_desc
@@ -69,7 +69,7 @@ class ProductController {
             if (sellerId) mongoQuery.sellerId = sellerId;
             if (rating) mongoQuery.rating = { $gte: parseFloat(rating) };
 
-            
+
             if (minPrice || maxPrice) {
                 mongoQuery['variants.0.price'] = {};
                 if (minPrice) mongoQuery['variants.0.price'].$gte = parseFloat(minPrice);
@@ -82,7 +82,7 @@ class ProductController {
             if (sort === 'price_desc') sortQuery = { 'variants.0.price': -1 };
 
             const products = await Product.find(mongoQuery).sort(sortQuery).limit(50);
-            
+
             await redisClient.set(cacheKey, JSON.stringify(products), 'EX', CACHE_TTL);
 
             return res.status(200).json({
@@ -178,9 +178,9 @@ class ProductController {
             );
 
             if (!updatedProduct) {
-                return res.status(400).json({ 
-                    success: false, 
-                    message: 'Sản phẩm không tồn tại hoặc không đủ hàng (Out of stock)' 
+                return res.status(400).json({
+                    success: false,
+                    message: 'Sản phẩm không tồn tại hoặc không đủ hàng (Out of stock)'
                 });
             }
 
@@ -201,8 +201,14 @@ class ProductController {
     // Tạo sản phẩm mới (Write) -> Clear Cache All
     static async createProduct(req, res) {
         try {
+            if (req.body.slug) {
+                const existing = await Product.findOne({ slug: req.body.slug }).lean();
+                if (existing) {
+                    return res.status(409).json({ success: false, message: 'Slug already exists' });
+                }
+            }
             const newProduct = await Product.create(req.body);
-            
+
             // Xóa cache danh sách chung do có thêm 1 item
             await ProductController.invalidateProductCache();
 
@@ -220,7 +226,7 @@ class ProductController {
         try {
             const { id } = req.params;
             const updatedProduct = await Product.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
-            
+
             if (!updatedProduct) {
                 return res.status(404).json({ success: false, message: 'Product not found' });
             }
@@ -242,7 +248,7 @@ class ProductController {
         try {
             const { id } = req.params;
             const deletedProduct = await Product.findByIdAndDelete(id);
-            
+
             if (!deletedProduct) {
                 return res.status(404).json({ success: false, message: 'Product not found' });
             }

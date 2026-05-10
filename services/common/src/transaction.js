@@ -17,7 +17,6 @@ const runTransactionWithRetry = async (mongoose, operations, maxRetries = 3) => 
             // Bỏ j:true: chỉ cần majority nodes xác nhận đã ghi vào RAM/journal buffer,
             // không cần flush disk đồng bộ → giảm latency ~200-500ms mỗi transaction.
             // Trade-off: mất an toàn nếu cả primary + majority secondary crash đồng thời
-            // (xác suất cực thấp trong thực tế production).
             writeConcern: { w: 'majority' }
         });
 
@@ -53,7 +52,7 @@ const runTransactionWithRetry = async (mongoose, operations, maxRetries = 3) => 
  */
 const commitWithRetry = async (session) => {
     while (true) {
-        try {
+        try {   
             await session.commitTransaction();
             console.log('[Transaction] Committed successfully.');
             break;

@@ -22,7 +22,6 @@ class PaymentController {
         try {
             const { id: paymentId } = req.params;
             const { amount, reason } = req.body;
-
             console.log(`[REFUND] Processing refund for payment ${paymentId}, amount: ${amount}, reason: ${reason}`);
             
             // Giả lập gọi gateway VNPay/Momo

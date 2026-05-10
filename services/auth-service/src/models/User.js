@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
     emailHmac: {
         type: String,
         required: true,
-        unique: true,
+        unique: false,
         index: true
     },
     perUserSalt: {
@@ -84,7 +84,7 @@ const userSchema = new mongoose.Schema({
 // Thêm Indexes đúng như thiết kế
 // userSchema.index({ emailHmac: 1 }, { unique: true }); // Redundant as defined in field
 // Sparse cho phép null hoặc thiếu sessionId không gây lỗi
-userSchema.index({ "sessions.sessionId": 1 }, { unique: true, sparse: true });
+userSchema.index({ "sessions.sessionId": 1 }, {sparse: true });
 // TTL Index trên embedded array: Xóa document gốc? -> KHÔNG (Như đã phân tích, TTL xóa nguyên document).
 // Tuy nhiên, Mongoose cho phép tạo TTL index trên 1 field trong mảng, MongoDB SẼ xóa toàn bộ document.
 // DO ĐÓ: KHÔNG TẠO TTL INDEX NÀY Ở ĐÂY, sẽ dùng Cron Job.

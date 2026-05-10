@@ -6,7 +6,7 @@ const Product = require('../services/order-service/src/models/product.model');
 const BASE_URL = "http://localhost:5003/api/orders";
 const MONGO_URI = "mongodb://admin:Lyhaiquan2005%40@157.245.99.196:27000/ecommerce_db?authSource=admin";
 const PRODUCT_ID = "PROD_ID_1";
-
+// client -> orderservice -> mongodb (ecommerce_db.orders)
 async function setup() {
     await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 5000, socketTimeoutMS: 10000 });
     await Product.deleteMany({ _id: PRODUCT_ID });

@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema({
     sellerId: { type: String, required: true, index: true },
     sellerRegion: { type: String, enum: ['NORTH', 'CENTRAL', 'SOUTH'], required: true },
     name: { type: String, required: true, trim: true },
-    slug: { type: String, required: true, unique: true },
+    slug: { type: String, required: true, unique: false },
     categoryId: { type: String, required: true },
     variants: [variantSchema],
     status: {

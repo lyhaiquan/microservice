@@ -13,7 +13,7 @@
  *  Yêu cầu:
  *    - Docker containers đang chạy (MongoDB, Kafka, Redis)
  *    - Product Service (port 5001) + Order Service (port 5003) đã start
- *    - API Gateway (Nginx) listen trên port 8080
+ *    - API Gateway (Nginx) listen trên port 8081
  * 
  *  Chạy: node scripts/race-condition-test.js
  * ============================================================
@@ -253,12 +253,12 @@ function printVerdict(results, dbState) {
     console.log(`    ┌──────────────────────────────────┬───────────┐`);
     console.log(`    │ ${colors.bold}Metric${colors.reset}                           │ ${colors.bold}Value${colors.reset}     │`);
     console.log(`    ├──────────────────────────────────┼───────────┤`);
-    console.log(`    │ 🟢 Requests thành công (201)      │     ${colors.green}${String(successCount).padStart(2)}${colors.reset}    │`);
-    console.log(`    │ 🔴 Requests bị từ chối (400)      │     ${colors.red}${String(failedCount).padStart(2)}${colors.reset}    │`);
-    console.log(`    │ ⚫ Requests lỗi khác              │     ${String(errorCount).padStart(2)}    │`);
+    console.log(`    │ 🟢 Requests thành công (201)     │     ${colors.green}${String(successCount).padStart(2)}${colors.reset}    │`);
+    console.log(`    │ 🔴 Requests bị từ chối (400)     │     ${colors.red}${String(failedCount).padStart(2)}${colors.reset}    │`);
+    console.log(`    │ ⚫ Requests lỗi khác             │     ${String(errorCount).padStart(2)}    │`);
     console.log(`    ├──────────────────────────────────┼───────────┤`);
-    console.log(`    │ 📦 Tồn kho DB (expected: 0)       │     ${dbState.finalStock === 0 ? colors.green : colors.red}${String(dbState.finalStock).padStart(2)}${colors.reset}    │`);
-    console.log(`    │ 📝 Orders DB (expected: 1)         │     ${dbState.ordersCount === 1 ? colors.green : colors.red}${String(dbState.ordersCount).padStart(2)}${colors.reset}    │`);
+    console.log(`    │ 📦 Tồn kho DB (expected: 0)      │     ${dbState.finalStock === 0 ? colors.green : colors.red}${String(dbState.finalStock).padStart(2)}${colors.reset}    │`);
+    console.log(`    │ 📝 Orders DB (expected: 1)       │     ${dbState.ordersCount === 1 ? colors.green : colors.red}${String(dbState.ordersCount).padStart(2)}${colors.reset}    │`);
     console.log(`    └──────────────────────────────────┴───────────┘`);
     console.log('');
 
